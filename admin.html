@@ -116,14 +116,8 @@
   .modal-grid .full { grid-column:1/-1; }
 
   /* Image upload */
-  .img-upload-area {
-    border:2px dashed var(--border); padding:20px; text-align:center; cursor:pointer;
-    transition:border-color 0.15s; background:var(--bg); position:relative;
-  }
-  .img-upload-area:hover { border-color:var(--text); }
-  .img-upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-  .img-upload-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; pointer-events:none; }
-  .img-preview { max-width:100%; max-height:120px; object-fit:cover; margin-top:10px; display:none; }
+  .img-preview { max-width:100%; max-height:120px; object-fit:cover; margin-top:10px; display:none; border:1px solid var(--border); }
+  .img-url-hint { font-size:10px; color:var(--muted); margin-top:6px; line-height:1.5; }
 
   .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
   .btn-cancel { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:10px 20px; cursor:pointer; transition:all 0.15s; }
@@ -244,12 +238,10 @@
         <input type="number" id="m-precio" placeholder="Ej: 8000">
       </div>
       <div class="field full">
-        <label>Foto del producto</label>
-        <div class="img-upload-area" id="img-upload-area">
-          <input type="file" id="m-foto" accept="image/*" onchange="previewImage(event)">
-          <div class="img-upload-label">Tocá para subir una imagen (JPG, PNG)</div>
-          <img id="img-preview" class="img-preview" alt="preview">
-        </div>
+        <label>URL de la foto (Imgur)</label>
+        <input type="url" id="m-foto-url" placeholder="https://i.imgur.com/xxxxxxx.jpg" oninput="previewImageUrl()">
+        <div class="img-url-hint">Subí la foto en <strong>imgur.com</strong>, clic derecho → "Copiar dirección de imagen" y pegala acá.</div>
+        <img id="img-preview" class="img-preview" alt="preview">
       </div>
     </div>
     <div class="modal-actions">
@@ -400,8 +392,11 @@ function abrirModal(id=null) {
     document.getElementById("m-tiempo").value = p.tiempo;
     document.getElementById("m-precio").value = p.precio;
     if (p.foto) {
+      document.getElementById("m-foto-url").value = p.foto;
       const prev = document.getElementById("img-preview");
       prev.src = p.foto; prev.style.display = "block";
+    } else {
+      document.getElementById("m-foto-url").value = "";
     }
   } else {
     ["m-nombre","m-tag","m-filamento","m-tiempo","m-precio"].forEach(id=>document.getElementById(id).value="");
@@ -417,22 +412,23 @@ function editarProducto(id) { abrirModal(id); }
 function cerrarModal() {
   document.getElementById("modal-overlay").classList.remove("open");
   editingId = null;
+  ["m-nombre","m-tag","m-filamento","m-insumos","m-tiempo","m-precio","m-foto-url"].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) { e.value = id === "m-insumos" ? "0" : ""; e.classList.remove("error"); }
+  });
+  const prev = document.getElementById("img-preview");
+  prev.style.display = "none"; prev.src = "";
 }
 
 function cerrarModalSiOverlay(e) {
   if (e.target === document.getElementById("modal-overlay")) cerrarModal();
 }
 
-function previewImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const prev = document.getElementById("img-preview");
-    prev.src = ev.target.result;
-    prev.style.display = "block";
-  };
-  reader.readAsDataURL(file);
+function previewImageUrl() {
+  const url = document.getElementById("m-foto-url").value.trim();
+  const prev = document.getElementById("img-preview");
+  if (url) { prev.src = url; prev.style.display = "block"; }
+  else { prev.style.display = "none"; prev.src = ""; }
 }
 
 function guardarProducto() {
@@ -442,8 +438,7 @@ function guardarProducto() {
   const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
   const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
   const precio    = parseFloat(document.getElementById("m-precio").value) || 0;
-  const fotoEl    = document.getElementById("img-preview");
-  const foto      = fotoEl.style.display !== "none" ? fotoEl.src : "";
+  const foto      = document.getElementById("m-foto-url").value.trim();
 
   if (!nombre || !precio) {
     if (!nombre) document.getElementById("m-nombre").classList.add("error");
@@ -453,6 +448,7 @@ function guardarProducto() {
 
   if (editingId) {
     const idx = productos.findIndex(p=>p.id===editingId);
+
     if (idx >= 0) productos[idx] = { ...productos[idx], nombre, tag, filamento, insumos, tiempo, precio, foto };
     toast("Producto actualizado ✓");
   } else {
