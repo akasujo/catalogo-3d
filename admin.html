@@ -282,11 +282,8 @@ if (sessionStorage.getItem("admin_auth") === "1") {
 }
 
 // ── GITHUB API ───────────────────────────────────────────────────────────────
-const GH_USER   = "akasujo";
-const GH_REPO   = "catalogo-3d";
-const RAW_URL   = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data.json`;
-const DISPATCH_URL = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/dispatches`;
-const GH_TOKEN  = atob("Z2hwX0NTdmZTaWdicVpjbFd0T2R1YkZ0SFdGZHB4QTRnRzRJVDNPbw==");
+const RAW_URL    = "https://raw.githubusercontent.com/akasujo/catalogo-3d/main/data.json";
+const WORKER_URL = "https://catalogo-worker.akasujo.workers.dev";
 
 async function ghGet() {
   const res = await fetch(RAW_URL + "?t=" + Date.now());
@@ -295,17 +292,10 @@ async function ghGet() {
 }
 
 async function ghSave(data) {
-  const res = await fetch(DISPATCH_URL, {
+  const res = await fetch(WORKER_URL, {
     method: "POST",
-    headers: {
-      Authorization: `token ${GH_TOKEN}`,
-      Accept: "application/vnd.github.v3+json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      event_type: "update-catalog",
-      client_payload: { data }
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data })
   });
   return res.ok;
 }
