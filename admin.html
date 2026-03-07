@@ -256,7 +256,6 @@
 
 <script>
 // ── AUTH ─────────────────────────────────────────────────────────────────────
-// Credenciales ofuscadas en base64
 const _u = atob("ZWxzdWpldG8=");
 const _p = atob("UXVpZXJvbGFidXJv");
 
@@ -274,62 +273,89 @@ function doLogin() {
   }
 }
 
-function doLogout() {
-  sessionStorage.removeItem("admin_auth");
-  location.reload();
-}
-
+function doLogout() { sessionStorage.removeItem("admin_auth"); location.reload(); }
 function enterLogin(e) { if (e.key === "Enter") doLogin(); }
 
-// Check if already logged in this session
 if (sessionStorage.getItem("admin_auth") === "1") {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("admin-panel").style.display = "block";
 }
 
+// ── GITHUB API ───────────────────────────────────────────────────────────────
+const GH_TOKEN = atob("Z2hwX3p3T0c4YzdFb0tKS0dVZmJycUt5dEFTQVk3cHI0cjBWVFRGVQ==");
+const GH_USER  = "akasujo";
+const GH_REPO  = "catalogo-3d";
+const GH_FILE  = "data.json";
+const API_URL  = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
+
+let fileSha = null;
+
+async function ghGet() {
+  const res = await fetch(API_URL, {
+    headers: { Authorization: `token ${GH_TOKEN}`, Accept: "application/vnd.github.v3+json" }
+  });
+  if (res.status === 404) return null;
+  const json = await res.json();
+  fileSha = json.sha;
+  return JSON.parse(atob(json.content.replace(/\n/g, "")));
+}
+
+async function ghSave(data) {
+  const body = {
+    message: "Actualizar catálogo",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+    ...(fileSha ? { sha: fileSha } : {})
+  };
+  const res = await fetch(API_URL, {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${GH_TOKEN}`,
+      Accept: "application/vnd.github.v3+json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+  const json = await res.json();
+  if (json.content) fileSha = json.content.sha;
+  return res.ok;
+}
+
 // ── DATA ─────────────────────────────────────────────────────────────────────
-const STORAGE_KEY = "catalogo_productos";
-const CONFIG_KEY  = "catalogo_config";
+const DEFAULT_DATA = {
+  config: { contacto: "", whatsapp: "" },
+  productos: [
+    { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", filamento:5.2,  insumos:100, tiempo:22,  precio:1250,  foto:"" },
+    { id:2, nombre:"Caja Anotadora Truco",           tag:"Juegos de mesa",      filamento:50,   insumos:0,   tiempo:140, precio:9500,  foto:"" },
+    { id:3, nombre:"Copa del Mundo 15cm",            tag:"Temporada · Mundial", filamento:70,   insumos:0,   tiempo:150, precio:6000,  foto:"" },
+    { id:4, nombre:"Copa del Mundo 20cm",            tag:"Temporada · Mundial", filamento:143,  insumos:0,   tiempo:260, precio:15000, foto:"" },
+    { id:5, nombre:"Copa del Mundo 25cm",            tag:"Temporada · Mundial", filamento:254,  insumos:0,   tiempo:395, precio:25000, foto:"" },
+    { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", filamento:55,   insumos:0,   tiempo:120, precio:7500,  foto:"" },
+  ]
+};
 
-const DEFAULT_PRODUCTS = [
-  { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", filamento:5.2,  insumos:100, tiempo:22,  precio:1250,  foto:"" },
-  { id:2, nombre:"Caja Anotadora Truco",           tag:"Juegos de mesa",      filamento:50,   insumos:0,   tiempo:140, precio:9500,  foto:"" },
-  { id:3, nombre:"Copa del Mundo 15cm",            tag:"Temporada · Mundial", filamento:70,   insumos:0,   tiempo:150, precio:6000,  foto:"" },
-  { id:4, nombre:"Copa del Mundo 20cm",            tag:"Temporada · Mundial", filamento:143,  insumos:0,   tiempo:260, precio:15000, foto:"" },
-  { id:5, nombre:"Copa del Mundo 25cm",            tag:"Temporada · Mundial", filamento:254,  insumos:0,   tiempo:395, precio:25000, foto:"" },
-  { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", filamento:55,   insumos:0,   tiempo:120, precio:7500,  foto:"" },
-];
-
-function load() {
-  try { const s=localStorage.getItem(STORAGE_KEY); return s?JSON.parse(s):[...DEFAULT_PRODUCTS]; }
-  catch(e) { return [...DEFAULT_PRODUCTS]; }
-}
-function save(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
-
-function loadConfig() {
-  try { const s=localStorage.getItem(CONFIG_KEY); return s?JSON.parse(s):{contacto:"",whatsapp:""}; }
-  catch(e) { return {contacto:"",whatsapp:""}; }
-}
-function saveConfigData(cfg) { localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }
-
-let productos = load();
+let productos = [];
+let config    = { contacto: "", whatsapp: "" };
 let editingId = null;
-let nextId = () => Math.max(0, ...productos.map(p=>p.id)) + 1;
+let nextId    = () => Math.max(0, ...productos.map(p=>p.id)) + 1;
 
 function fmt(n) { return "$"+Math.round(n).toLocaleString("es-AR"); }
 
-function toast(msg) {
+function toast(msg, error=false) {
   const t = document.getElementById("toast");
-  t.textContent = msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 2200);
+  t.textContent = msg;
+  t.style.background = error ? "var(--red)" : "var(--text)";
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2800);
+}
+
+function setLoading(on) {
+  document.querySelectorAll(".btn-add, .btn-save, .btn-outline").forEach(b => b.disabled = on);
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function renderList() {
   const list = document.getElementById("products-list");
   list.innerHTML = "";
-
-  // Header row
   const hdr = document.createElement("div");
   hdr.className = "product-row header-row";
   hdr.innerHTML = `
@@ -355,8 +381,8 @@ function renderList() {
       <div class="pr-cell center hide-mobile"><span class="pr-price">${fmt(p.precio)}</span></div>
       <div class="pr-cell center hide-mobile" style="font-size:12px;color:var(--muted)">${p.filamento}g · ${p.tiempo}min</div>
       <div class="pr-cell center" style="display:flex;gap:4px;justify-content:center">
-        <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})" title="Editar">✏️</button>
-        <button class="btn-icon" onclick="eliminarProducto(${p.id})" title="Eliminar">✕</button>
+        <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})">✏️</button>
+        <button class="btn-icon" onclick="eliminarProducto(${p.id})">✕</button>
       </div>`;
     list.appendChild(row);
   });
@@ -364,45 +390,41 @@ function renderList() {
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 function loadConfigUI() {
-  const cfg = loadConfig();
-  document.getElementById("cfg-contacto").value = cfg.contacto || "";
-  document.getElementById("cfg-whatsapp").value = cfg.whatsapp || "";
+  document.getElementById("cfg-contacto").value = config.contacto || "";
+  document.getElementById("cfg-whatsapp").value = config.whatsapp || "";
 }
 
-function saveConfig() {
-  const cfg = {
-    contacto: document.getElementById("cfg-contacto").value.trim(),
-    whatsapp: document.getElementById("cfg-whatsapp").value.trim(),
-  };
-  saveConfigData(cfg);
-  toast("Configuración guardada ✓");
+async function saveConfig() {
+  config.contacto = document.getElementById("cfg-contacto").value.trim();
+  config.whatsapp = document.getElementById("cfg-whatsapp").value.trim();
+  setLoading(true);
+  toast("Guardando en GitHub…");
+  const ok = await ghSave({ config, productos });
+  setLoading(false);
+  toast(ok ? "Configuración guardada ✓" : "Error al guardar", !ok);
 }
 
 // ── MODAL ─────────────────────────────────────────────────────────────────────
 function abrirModal(id=null) {
   editingId = id;
   document.getElementById("modal-title").textContent = id ? "Editar producto" : "Nuevo producto";
-
   if (id) {
     const p = productos.find(x=>x.id===id);
-    document.getElementById("m-nombre").value = p.nombre;
-    document.getElementById("m-tag").value = p.tag;
+    document.getElementById("m-nombre").value    = p.nombre;
+    document.getElementById("m-tag").value       = p.tag;
     document.getElementById("m-filamento").value = p.filamento;
-    document.getElementById("m-insumos").value = p.insumos;
-    document.getElementById("m-tiempo").value = p.tiempo;
-    document.getElementById("m-precio").value = p.precio;
-    if (p.foto) {
-      document.getElementById("m-foto-url").value = p.foto;
-      const prev = document.getElementById("img-preview");
-      prev.src = p.foto; prev.style.display = "block";
-    } else {
-      document.getElementById("m-foto-url").value = "";
-    }
+    document.getElementById("m-insumos").value   = p.insumos;
+    document.getElementById("m-tiempo").value    = p.tiempo;
+    document.getElementById("m-precio").value    = p.precio;
+    document.getElementById("m-foto-url").value  = p.foto || "";
+    const prev = document.getElementById("img-preview");
+    if (p.foto) { prev.src = p.foto; prev.style.display = "block"; }
+    else { prev.style.display = "none"; prev.src = ""; }
   } else {
-    ["m-nombre","m-tag","m-filamento","m-tiempo","m-precio"].forEach(id=>document.getElementById(id).value="");
+    ["m-nombre","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
     document.getElementById("m-insumos").value = "0";
-    document.getElementById("img-preview").style.display = "none";
-    document.getElementById("img-preview").src = "";
+    const prev = document.getElementById("img-preview");
+    prev.style.display = "none"; prev.src = "";
   }
   document.getElementById("modal-overlay").classList.add("open");
 }
@@ -431,7 +453,7 @@ function previewImageUrl() {
   else { prev.style.display = "none"; prev.src = ""; }
 }
 
-function guardarProducto() {
+async function guardarProducto() {
   const nombre    = document.getElementById("m-nombre").value.trim();
   const tag       = document.getElementById("m-tag").value.trim() || "General";
   const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
@@ -446,35 +468,49 @@ function guardarProducto() {
     return;
   }
 
-  if (editingId) {
-    const idx = productos.findIndex(p=>p.id===editingId);
-
+  const isEditing = editingId;
+  if (isEditing) {
+    const idx = productos.findIndex(p=>p.id===isEditing);
     if (idx >= 0) productos[idx] = { ...productos[idx], nombre, tag, filamento, insumos, tiempo, precio, foto };
-    toast("Producto actualizado ✓");
   } else {
     productos.push({ id:nextId(), nombre, tag, filamento, insumos, tiempo, precio, foto });
-    toast("Producto agregado ✓");
   }
 
-  save(productos);
   cerrarModal();
   renderList();
+  setLoading(true);
+  toast("Guardando en GitHub…");
+  const ok = await ghSave({ config, productos });
+  setLoading(false);
+  toast(ok ? (isEditing ? "Producto actualizado ✓" : "Producto agregado ✓") : "Error al guardar", !ok);
 }
 
-function eliminarProducto(id) {
+async function eliminarProducto(id) {
   const p = productos.find(x=>x.id===id);
   if (!confirm(`¿Eliminar "${p.nombre}"?`)) return;
   productos = productos.filter(x=>x.id!==id);
-  save(productos);
   renderList();
-  toast("Producto eliminado");
+  setLoading(true);
+  toast("Guardando en GitHub…");
+  const ok = await ghSave({ config, productos });
+  setLoading(false);
+  toast(ok ? "Producto eliminado ✓" : "Error al guardar", !ok);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-function init() {
-  productos = load();
+async function init() {
+  toast("Cargando datos…");
+  const data = await ghGet();
+  if (data) {
+    productos = data.productos || [];
+    config    = data.config    || { contacto:"", whatsapp:"" };
+  } else {
+    productos = DEFAULT_DATA.productos;
+    config    = DEFAULT_DATA.config;
+  }
   loadConfigUI();
   renderList();
+  toast("Listo ✓");
 }
 
 if (sessionStorage.getItem("admin_auth") === "1") init();
