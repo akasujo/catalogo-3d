@@ -4,11 +4,16 @@ on:
   repository_dispatch:
     types: [update-catalog]
 
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Write data
         run: echo '${{ toJson(github.event.client_payload.data) }}' > data.json
       - name: Commit
@@ -19,4 +24,4 @@ jobs:
           git diff --cached --quiet || git commit -m "Actualizar catálogo"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
