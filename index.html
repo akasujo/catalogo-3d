@@ -83,6 +83,28 @@
 
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
   .card { animation:fadeIn 0.3s ease both; }
+
+  /* ── LIGHTBOX ── */
+  .lightbox-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity 0.2s;
+    cursor:zoom-out;
+  }
+  .lightbox-overlay.open { opacity:1; pointer-events:all; }
+  .lightbox-overlay img {
+    max-width:90vw; max-height:90vh; object-fit:contain;
+    transform:scale(0.92); transition:transform 0.2s;
+    cursor:default;
+  }
+  .lightbox-overlay.open img { transform:scale(1); }
+  .lightbox-close {
+    position:fixed; top:20px; right:24px; color:#fff; font-size:32px;
+    cursor:pointer; line-height:1; opacity:0.7; transition:opacity 0.15s;
+    background:none; border:none;
+  }
+  .lightbox-close:hover { opacity:1; }
+  .card-img-wrap img { cursor:zoom-in; }
 </style>
 </head>
 <body>
@@ -209,7 +231,7 @@ function renderCards() {
     card.className = "card";
     card.style.animationDelay = (i * 0.05) + "s";
     const imgHTML = p.foto
-      ? `<img src="${p.foto}" alt="${p.nombre}">`
+      ? `<img src="${p.foto}" alt="${p.nombre}" onclick="openLightbox('${p.foto}', '${p.nombre}')">`
       : `<div class="card-img-placeholder">🖨️</div>`;
     card.innerHTML = `
       <div class="card-img-wrap">${imgHTML}</div>
@@ -241,7 +263,27 @@ function renderContact(cfg) {
   }
 }
 
+function openLightbox(src, alt) {
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  img.src = src; img.alt = alt;
+  lb.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+
 loadData();
 </script>
+
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
 </body>
 </html>
