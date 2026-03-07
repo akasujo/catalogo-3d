@@ -122,8 +122,10 @@
 </footer>
 
 <script>
-const STORAGE_KEY = "catalogo_productos";
-const CONFIG_KEY  = "catalogo_config";
+const GH_USER = "akasujo";
+const GH_REPO = "catalogo-3d";
+const GH_FILE = "data.json";
+const API_URL = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
 
 const DEFAULT_PRODUCTS = [
   { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", precio:1250,  foto:"" },
@@ -134,26 +136,32 @@ const DEFAULT_PRODUCTS = [
   { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", precio:7500,  foto:"" },
 ];
 
-const DEFAULT_CONFIG = { contacto: "", whatsapp: "" };
+let productos = [];
+let filtroActivo = "Todos";
 
-function load() {
-  try { const s=localStorage.getItem(STORAGE_KEY); return s?JSON.parse(s):[...DEFAULT_PRODUCTS]; }
-  catch(e) { return [...DEFAULT_PRODUCTS]; }
-}
-
-function loadConfig() {
-  try { const s=localStorage.getItem(CONFIG_KEY); return s?JSON.parse(s):{...DEFAULT_CONFIG}; }
-  catch(e) { return {...DEFAULT_CONFIG}; }
+async function loadData() {
+  try {
+    const res = await fetch(API_URL + "?t=" + Date.now(), {
+      headers: { Accept: "application/vnd.github.v3+json" }
+    });
+    if (!res.ok) throw new Error("no data");
+    const json = await res.json();
+    const data = JSON.parse(atob(json.content.replace(/\n/g, "")));
+    productos = data.productos || DEFAULT_PRODUCTS;
+    const cfg = data.config || {};
+    renderContact(cfg);
+  } catch(e) {
+    productos = DEFAULT_PRODUCTS;
+  }
+  renderFilters();
+  renderCards();
+  updateStats();
 }
 
 function fmt(n) { return "$"+Math.round(n).toLocaleString("es-AR"); }
 
-let productos = load();
-let filtroActivo = "Todos";
-
 function getTags() {
-  const tags = [...new Set(productos.map(p=>p.tag))];
-  return ["Todos", ...tags];
+  return ["Todos", ...[...new Set(productos.map(p=>p.tag))]];
 }
 
 function renderFilters() {
@@ -205,10 +213,9 @@ function updateStats() {
   document.getElementById("stat-desde").textContent = fmt(minPrecio);
 }
 
-function renderContact() {
-  const cfg = loadConfig();
+function renderContact(cfg) {
   const el = document.getElementById("contact-info");
-  if (cfg.contacto || cfg.whatsapp) {
+  if (cfg && (cfg.contacto || cfg.whatsapp)) {
     el.innerHTML = `
       ${cfg.contacto ? `<p><strong>Contacto:</strong> ${cfg.contacto}</p>` : ""}
       ${cfg.whatsapp ? `<p><strong>WhatsApp:</strong> ${cfg.whatsapp}</p>` : ""}
@@ -216,21 +223,7 @@ function renderContact() {
   }
 }
 
-// Poll for changes (in case admin is open in another tab)
-setInterval(() => {
-  const fresh = load();
-  if (JSON.stringify(fresh) !== JSON.stringify(productos)) {
-    productos = fresh;
-    renderFilters();
-    renderCards();
-    updateStats();
-  }
-}, 2000);
-
-renderContact();
-renderFilters();
-renderCards();
-updateStats();
+loadData();
 </script>
 </body>
 </html>
