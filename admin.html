@@ -282,41 +282,31 @@ if (sessionStorage.getItem("admin_auth") === "1") {
 }
 
 // ── GITHUB API ───────────────────────────────────────────────────────────────
-const GH_TOKEN = atob("Z2hwX0NTdmZTaWdicVpjbFd0T2R1YkZ0SFdGZHB4QTRnRzRJVDNPbw==");
-const GH_USER  = "akasujo";
-const GH_REPO  = "catalogo-3d";
-const GH_FILE  = "data.json";
-const API_URL  = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${GH_FILE}`;
-
-let fileSha = null;
+const GH_USER   = "akasujo";
+const GH_REPO   = "catalogo-3d";
+const RAW_URL   = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main/data.json`;
+const DISPATCH_URL = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/dispatches`;
+const GH_TOKEN  = atob("Z2hwX0NTdmZTaWdicVpjbFd0T2R1YkZ0SFdGZHB4QTRnRzRJVDNPbw==");
 
 async function ghGet() {
-  const res = await fetch(API_URL, {
-    headers: { Authorization: `token ${GH_TOKEN}`, Accept: "application/vnd.github.v3+json" }
-  });
-  if (res.status === 404) return null;
-  const json = await res.json();
-  fileSha = json.sha;
-  return JSON.parse(atob(json.content.replace(/\n/g, "")));
+  const res = await fetch(RAW_URL + "?t=" + Date.now());
+  if (!res.ok) return null;
+  return await res.json();
 }
 
 async function ghSave(data) {
-  const body = {
-    message: "Actualizar catálogo",
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-    ...(fileSha ? { sha: fileSha } : {})
-  };
-  const res = await fetch(API_URL, {
-    method: "PUT",
+  const res = await fetch(DISPATCH_URL, {
+    method: "POST",
     headers: {
       Authorization: `token ${GH_TOKEN}`,
       Accept: "application/vnd.github.v3+json",
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify({
+      event_type: "update-catalog",
+      client_payload: { data }
+    })
   });
-  const json = await res.json();
-  if (json.content) fileSha = json.content.sha;
   return res.ok;
 }
 
@@ -398,7 +388,7 @@ async function saveConfig() {
   config.contacto = document.getElementById("cfg-contacto").value.trim();
   config.whatsapp = document.getElementById("cfg-whatsapp").value.trim();
   setLoading(true);
-  toast("Guardando en GitHub…");
+  toast("Guardando…");
   const ok = await ghSave({ config, productos });
   setLoading(false);
   toast(ok ? "Configuración guardada ✓" : "Error al guardar", !ok);
@@ -479,10 +469,11 @@ async function guardarProducto() {
   cerrarModal();
   renderList();
   setLoading(true);
-  toast("Guardando en GitHub…");
+  toast("Guardando…");
   const ok = await ghSave({ config, productos });
   setLoading(false);
-  toast(ok ? (isEditing ? "Producto actualizado ✓" : "Producto agregado ✓") : "Error al guardar", !ok);
+  // La Action tarda ~30seg en procesar
+  toast(ok ? "Cambios enviados ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
 }
 
 async function eliminarProducto(id) {
@@ -491,10 +482,10 @@ async function eliminarProducto(id) {
   productos = productos.filter(x=>x.id!==id);
   renderList();
   setLoading(true);
-  toast("Guardando en GitHub…");
+  toast("Guardando…");
   const ok = await ghSave({ config, productos });
   setLoading(false);
-  toast(ok ? "Producto eliminado ✓" : "Error al guardar", !ok);
+  toast(ok ? "Producto eliminado ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
