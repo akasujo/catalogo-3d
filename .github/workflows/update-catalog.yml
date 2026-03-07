@@ -1,0 +1,22 @@
+name: Update Catalog
+
+on:
+  repository_dispatch:
+    types: [update-catalog]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Write data
+        run: echo '${{ toJson(github.event.client_payload.data) }}' > data.json
+      - name: Commit
+        run: |
+          git config user.email "admin@catalogo"
+          git config user.name "Catalogo Admin"
+          git add data.json
+          git diff --cached --quiet || git commit -m "Actualizar catálogo"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
