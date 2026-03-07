@@ -283,7 +283,7 @@ if (sessionStorage.getItem("admin_auth") === "1") {
 
 // ── GITHUB API ───────────────────────────────────────────────────────────────
 const RAW_URL    = "https://raw.githubusercontent.com/akasujo/catalogo-3d/main/data.json";
-const WORKER_URL = "https://catalogo-worker.akasujo.workers.dev";
+const WORKER_URL = "https://catalogo-api.akasujo.workers.dev";
 
 async function ghGet() {
   const res = await fetch(RAW_URL + "?t=" + Date.now());
