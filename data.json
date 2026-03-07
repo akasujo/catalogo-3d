@@ -1,0 +1,14 @@
+{
+  "config": {
+    "contacto": "",
+    "whatsapp": ""
+  },
+  "productos": [
+    { "id": 1, "nombre": "Llavero Copa del Mundo 2026", "tag": "Temporada · Mundial", "filamento": 5.2, "insumos": 100, "tiempo": 22, "precio": 1250, "foto": "" },
+    { "id": 2, "nombre": "Caja Anotadora Truco", "tag": "Juegos de mesa", "filamento": 50, "insumos": 0, "tiempo": 140, "precio": 9500, "foto": "" },
+    { "id": 3, "nombre": "Copa del Mundo 15cm", "tag": "Temporada · Mundial", "filamento": 70, "insumos": 0, "tiempo": 150, "precio": 6000, "foto": "" },
+    { "id": 4, "nombre": "Copa del Mundo 20cm", "tag": "Temporada · Mundial", "filamento": 143, "insumos": 0, "tiempo": 260, "precio": 15000, "foto": "" },
+    { "id": 5, "nombre": "Copa del Mundo 25cm", "tag": "Temporada · Mundial", "filamento": 254, "insumos": 0, "tiempo": 395, "precio": 25000, "foto": "" },
+    { "id": 6, "nombre": "Caja de Figuritas Mundial 2026", "tag": "Temporada · Mundial", "filamento": 55, "insumos": 0, "tiempo": 120, "precio": 7500, "foto": "" }
+  ]
+}
