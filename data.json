@@ -4,11 +4,65 @@
     "whatsapp": ""
   },
   "productos": [
-    { "id": 1, "nombre": "Llavero Copa del Mundo 2026", "tag": "Temporada · Mundial", "filamento": 5.2, "insumos": 100, "tiempo": 22, "precio": 1250, "foto": "" },
-    { "id": 2, "nombre": "Caja Anotadora Truco", "tag": "Juegos de mesa", "filamento": 50, "insumos": 0, "tiempo": 140, "precio": 9500, "foto": "" },
-    { "id": 3, "nombre": "Copa del Mundo 15cm", "tag": "Temporada · Mundial", "filamento": 70, "insumos": 0, "tiempo": 150, "precio": 6000, "foto": "" },
-    { "id": 4, "nombre": "Copa del Mundo 20cm", "tag": "Temporada · Mundial", "filamento": 143, "insumos": 0, "tiempo": 260, "precio": 15000, "foto": "" },
-    { "id": 5, "nombre": "Copa del Mundo 25cm", "tag": "Temporada · Mundial", "filamento": 254, "insumos": 0, "tiempo": 395, "precio": 25000, "foto": "" },
-    { "id": 6, "nombre": "Caja de Figuritas Mundial 2026", "tag": "Temporada · Mundial", "filamento": 55, "insumos": 0, "tiempo": 120, "precio": 7500, "foto": "" }
+    {
+      "filamento": 5.2,
+      "foto": "",
+      "id": 1,
+      "insumos": 100,
+      "nombre": "Llavero Copa del Mundo 2026",
+      "precio": 1250,
+      "tag": "Temporada · Mundial",
+      "tiempo": 22
+    },
+    {
+      "filamento": 50,
+      "foto": "",
+      "id": 2,
+      "insumos": 0,
+      "nombre": "Caja Anotadora Truco",
+      "precio": 9500,
+      "tag": "Juegos de mesa",
+      "tiempo": 140
+    },
+    {
+      "filamento": 70,
+      "foto": "",
+      "id": 3,
+      "insumos": 0,
+      "nombre": "Copa del Mundo 15cm",
+      "precio": 6000,
+      "tag": "Temporada · Mundial",
+      "tiempo": 150
+    },
+    {
+      "filamento": 143,
+      "foto": "",
+      "id": 4,
+      "insumos": 0,
+      "nombre": "Copa del Mundo 20cm",
+      "precio": 15000,
+      "tag": "Temporada · Mundial",
+      "tiempo": 260
+    },
+    {
+      "filamento": 254,
+      "foto": "",
+      "id": 5,
+      "insumos": 0,
+      "nombre": "Copa del Mundo 25cm",
+      "precio": 25000,
+      "tag": "Temporada · Mundial",
+      "tiempo": 395
+    },
+    {
+      "filamento": 55,
+      "foto": "https://i.imgur.com/mbE6QI2.jpeg",
+      "id": 6,
+      "insumos": 0,
+      "nombre": "Caja de Figuritas Mundial 2026",
+      "precio": 7500,
+      "tag": "Temporada · Mundial",
+      "tiempo": 120
+    }
   ]
 }
