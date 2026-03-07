@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Impresión 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E8E6E1;
+    --bg2: #DEDAD4;
+    --border: #C8C4BC;
+    --text: #111111;
+    --muted: #888880;
+    --green: #2A6B3A;
+    --green-bg: #EAF3EC;
+    --red: #8B2020;
+    --red-bg: #F5EAEA;
+    --white: #F2F0EB;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
+  .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+  }
+  .login-box {
+    background:var(--white); border-top:3px solid var(--text);
+    padding:48px; width:100%; max-width:380px;
+  }
+  .login-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; text-transform:uppercase; margin-bottom:8px; }
+  .login-sub { font-size:12px; color:var(--muted); margin-bottom:32px; letter-spacing:0.05em; }
+  .field { display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
+  .field label { font-size:9px; text-transform:uppercase; letter-spacing:0.15em; color:var(--muted); }
+  .field input {
+    background:transparent; border:none; border-bottom:2px solid var(--border);
+    padding:9px 4px; color:var(--text); font-family:'Barlow',sans-serif;
+    font-size:14px; font-weight:500; outline:none; width:100%; transition:border-color 0.15s;
+  }
+  .field input:focus { border-bottom-color:var(--text); }
+  .field input.error { border-bottom-color:var(--red); }
+  .login-error { font-size:11px; color:var(--red); margin-bottom:16px; display:none; }
+  .login-error.visible { display:block; }
+  .btn-primary {
+    background:var(--text); border:none; color:var(--white);
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px;
+    letter-spacing:0.08em; text-transform:uppercase; padding:12px 28px;
+    cursor:pointer; width:100%; transition:background 0.15s; margin-top:8px;
+  }
+  .btn-primary:hover { background:#333; }
+
+  /* ── ADMIN PANEL ── */
+  #admin-panel { display:none; }
+  header { padding:40px 0 28px; border-bottom:2px solid var(--text); margin-bottom:32px; }
+  .header-inner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .admin-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(36px,6vw,64px); text-transform:uppercase; line-height:0.9; }
+  .admin-title span { display:block; font-weight:300; font-size:0.4em; color:var(--muted); font-family:'Barlow',sans-serif; margin-top:4px; }
+  .header-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:9px 16px; cursor:pointer; transition:all 0.15s; text-decoration:none; display:inline-flex; align-items:center; }
+  .btn-outline:hover { border-color:var(--text); color:var(--text); }
+  .btn-logout { color:var(--red); border-color:rgba(139,32,32,0.3); }
+  .btn-logout:hover { border-color:var(--red); color:var(--red); }
+
+  /* Config section */
+  .section-header { border-top:2px solid var(--text); padding-top:12px; margin-bottom:20px; display:flex; align-items:baseline; justify-content:space-between; }
+  .section-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; text-transform:uppercase; line-height:1; }
+
+  .config-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; background:var(--white); border:1px solid var(--border); padding:24px; margin-bottom:40px; }
+  .config-grid .full { grid-column:1/-1; }
+
+  /* Products table */
+  .products-list { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:32px; }
+
+  .product-row {
+    background:var(--white); display:grid;
+    grid-template-columns:56px 1fr 120px 120px 40px;
+    align-items:center; gap:0; transition:background 0.15s;
+  }
+  .product-row:hover { background:var(--bg2); }
+
+  .product-row.header-row {
+    background:var(--bg); cursor:default;
+  }
+  .product-row.header-row:hover { background:var(--bg); }
+
+  .pr-cell { padding:14px 16px; font-size:12px; }
+  .pr-cell.center { text-align:center; }
+  .pr-label { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); font-weight:500; }
+
+  .pr-img { width:40px; height:40px; object-fit:cover; border:1px solid var(--border); }
+  .pr-img-placeholder { width:40px; height:40px; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--border); }
+
+  .pr-name { font-weight:500; font-size:13px; }
+  .pr-tag { font-size:10px; color:var(--muted); margin-top:2px; }
+  .pr-price { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:18px; color:var(--green); }
+
+  .btn-icon { background:transparent; border:none; cursor:pointer; padding:8px; color:var(--border); font-size:14px; transition:color 0.15s; }
+  .btn-icon:hover { color:var(--red); }
+  .btn-edit { color:var(--muted); }
+  .btn-edit:hover { color:var(--text); }
+
+  /* Add button */
+  .btn-add { background:var(--text); border:none; color:var(--white); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 22px; cursor:pointer; transition:background 0.15s; }
+  .btn-add:hover { background:#333; }
+
+  /* Modal */
+  .modal-overlay { position:fixed; inset:0; background:rgba(17,17,17,0.55); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .modal { background:var(--white); border-top:3px solid var(--text); padding:36px; width:100%; max-width:500px; transform:translateY(12px); transition:transform 0.2s; max-height:90vh; overflow-y:auto; }
+  .modal-overlay.open .modal { transform:translateY(0); }
+  .modal-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:28px; text-transform:uppercase; margin-bottom:24px; }
+
+  .modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+  .modal-grid .full { grid-column:1/-1; }
+
+  /* Image upload */
+  .img-upload-area {
+    border:2px dashed var(--border); padding:20px; text-align:center; cursor:pointer;
+    transition:border-color 0.15s; background:var(--bg); position:relative;
+  }
+  .img-upload-area:hover { border-color:var(--text); }
+  .img-upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .img-upload-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; pointer-events:none; }
+  .img-preview { max-width:100%; max-height:120px; object-fit:cover; margin-top:10px; display:none; }
+
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+  .btn-cancel { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:10px 20px; cursor:pointer; transition:all 0.15s; }
+  .btn-cancel:hover { border-color:var(--text); color:var(--text); }
+  .btn-save { background:var(--text); border:none; color:var(--white); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 28px; cursor:pointer; transition:background 0.15s; }
+  .btn-save:hover { background:#333; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--text); color:var(--white); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:12px 24px; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:200; }
+  .toast.show { opacity:1; }
+
+  footer { border-top:1px solid var(--border); padding:24px 0; color:var(--muted); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-top:48px; }
+
+  @media(max-width:600px) {
+    .product-row { grid-template-columns:40px 1fr 100px 32px; }
+    .pr-cell.hide-mobile { display:none; }
+    .config-grid { grid-template-columns:1fr; }
+    .modal-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-title">Admin</div>
+    <div class="login-sub">Panel de administración · Impresión 3D</div>
+    <div class="field">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="usuario" onkeydown="enterLogin(event)">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="enterLogin(event)">
+    </div>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos.</div>
+    <button class="btn-primary" onclick="doLogin()">Ingresar</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="container">
+    <header>
+      <div class="header-inner">
+        <div>
+          <div class="admin-title">
+            PANEL ADMIN
+            <span>Impresión 3D · Damián</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="index.html" target="_blank" class="btn-outline">Ver catálogo →</a>
+          <button class="btn-outline btn-logout" onclick="doLogout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Config -->
+    <div class="section-header">
+      <span class="section-title">CONFIGURACIÓN</span>
+      <button class="btn-outline" onclick="saveConfig()">Guardar cambios</button>
+    </div>
+    <div class="config-grid">
+      <div class="field">
+        <label>Contacto / Email</label>
+        <input type="text" id="cfg-contacto" placeholder="Ej: damian@mail.com">
+      </div>
+      <div class="field">
+        <label>WhatsApp</label>
+        <input type="text" id="cfg-whatsapp" placeholder="Ej: +54 11 1234-5678">
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="section-header">
+      <span class="section-title">PRODUCTOS</span>
+      <button class="btn-add" onclick="abrirModal()">+ Agregar</button>
+    </div>
+
+    <div class="products-list" id="products-list"></div>
+
+  </div>
+
+  <footer>
+    <div class="container">Panel de administración · Impresión 3D Argentina</div>
+  </footer>
+</div>
+
+<!-- Modal agregar/editar -->
+<div class="modal-overlay" id="modal-overlay" onclick="cerrarModalSiOverlay(event)">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Nuevo producto</div>
+    <div class="modal-grid">
+      <div class="field full">
+        <label>Nombre del producto</label>
+        <input type="text" id="m-nombre" placeholder="Ej: Macetero geométrico">
+      </div>
+      <div class="field full">
+        <label>Categoría / etiqueta</label>
+        <input type="text" id="m-tag" placeholder="Ej: Decoración · Hogar">
+      </div>
+      <div class="field">
+        <label>Filamento (g)</label>
+        <input type="number" id="m-filamento" placeholder="Ej: 80">
+      </div>
+      <div class="field">
+        <label>Insumos extra ($)</label>
+        <input type="number" id="m-insumos" placeholder="0" value="0">
+      </div>
+      <div class="field">
+        <label>Tiempo impresión (min)</label>
+        <input type="number" id="m-tiempo" placeholder="Ej: 90">
+      </div>
+      <div class="field">
+        <label>Precio de venta ($)</label>
+        <input type="number" id="m-precio" placeholder="Ej: 8000">
+      </div>
+      <div class="field full">
+        <label>Foto del producto</label>
+        <div class="img-upload-area" id="img-upload-area">
+          <input type="file" id="m-foto" accept="image/*" onchange="previewImage(event)">
+          <div class="img-upload-label">Tocá para subir una imagen (JPG, PNG)</div>
+          <img id="img-preview" class="img-preview" alt="preview">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-save" onclick="guardarProducto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+// Credenciales ofuscadas en base64
+const _u = atob("ZWxzdWpldG8=");
+const _p = atob("UXVpZXJvbGFidXJv");
+
+function doLogin() {
+  const u = document.getElementById("login-user").value.trim();
+  const p = document.getElementById("login-pass").value;
+  if (u === _u && p === _p) {
+    sessionStorage.setItem("admin_auth", "1");
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+    init();
+  } else {
+    document.getElementById("login-error").classList.add("visible");
+    document.getElementById("login-pass").classList.add("error");
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem("admin_auth");
+  location.reload();
+}
+
+function enterLogin(e) { if (e.key === "Enter") doLogin(); }
+
+// Check if already logged in this session
+if (sessionStorage.getItem("admin_auth") === "1") {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("admin-panel").style.display = "block";
+}
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = "catalogo_productos";
+const CONFIG_KEY  = "catalogo_config";
+
+const DEFAULT_PRODUCTS = [
+  { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", filamento:5.2,  insumos:100, tiempo:22,  precio:1250,  foto:"" },
+  { id:2, nombre:"Caja Anotadora Truco",           tag:"Juegos de mesa",      filamento:50,   insumos:0,   tiempo:140, precio:9500,  foto:"" },
+  { id:3, nombre:"Copa del Mundo 15cm",            tag:"Temporada · Mundial", filamento:70,   insumos:0,   tiempo:150, precio:6000,  foto:"" },
+  { id:4, nombre:"Copa del Mundo 20cm",            tag:"Temporada · Mundial", filamento:143,  insumos:0,   tiempo:260, precio:15000, foto:"" },
+  { id:5, nombre:"Copa del Mundo 25cm",            tag:"Temporada · Mundial", filamento:254,  insumos:0,   tiempo:395, precio:25000, foto:"" },
+  { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", filamento:55,   insumos:0,   tiempo:120, precio:7500,  foto:"" },
+];
+
+function load() {
+  try { const s=localStorage.getItem(STORAGE_KEY); return s?JSON.parse(s):[...DEFAULT_PRODUCTS]; }
+  catch(e) { return [...DEFAULT_PRODUCTS]; }
+}
+function save(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+function loadConfig() {
+  try { const s=localStorage.getItem(CONFIG_KEY); return s?JSON.parse(s):{contacto:"",whatsapp:""}; }
+  catch(e) { return {contacto:"",whatsapp:""}; }
+}
+function saveConfigData(cfg) { localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }
+
+let productos = load();
+let editingId = null;
+let nextId = () => Math.max(0, ...productos.map(p=>p.id)) + 1;
+
+function fmt(n) { return "$"+Math.round(n).toLocaleString("es-AR"); }
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderList() {
+  const list = document.getElementById("products-list");
+  list.innerHTML = "";
+
+  // Header row
+  const hdr = document.createElement("div");
+  hdr.className = "product-row header-row";
+  hdr.innerHTML = `
+    <div class="pr-cell center"><span class="pr-label">Foto</span></div>
+    <div class="pr-cell"><span class="pr-label">Producto</span></div>
+    <div class="pr-cell center hide-mobile"><span class="pr-label">Precio</span></div>
+    <div class="pr-cell center hide-mobile"><span class="pr-label">Filamento</span></div>
+    <div class="pr-cell"></div>`;
+  list.appendChild(hdr);
+
+  productos.forEach(p => {
+    const row = document.createElement("div");
+    row.className = "product-row";
+    const imgHTML = p.foto
+      ? `<img class="pr-img" src="${p.foto}" alt="${p.nombre}">`
+      : `<div class="pr-img-placeholder">📦</div>`;
+    row.innerHTML = `
+      <div class="pr-cell center">${imgHTML}</div>
+      <div class="pr-cell">
+        <div class="pr-name">${p.nombre}</div>
+        <div class="pr-tag">${p.tag}</div>
+      </div>
+      <div class="pr-cell center hide-mobile"><span class="pr-price">${fmt(p.precio)}</span></div>
+      <div class="pr-cell center hide-mobile" style="font-size:12px;color:var(--muted)">${p.filamento}g · ${p.tiempo}min</div>
+      <div class="pr-cell center" style="display:flex;gap:4px;justify-content:center">
+        <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})" title="Editar">✏️</button>
+        <button class="btn-icon" onclick="eliminarProducto(${p.id})" title="Eliminar">✕</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+function loadConfigUI() {
+  const cfg = loadConfig();
+  document.getElementById("cfg-contacto").value = cfg.contacto || "";
+  document.getElementById("cfg-whatsapp").value = cfg.whatsapp || "";
+}
+
+function saveConfig() {
+  const cfg = {
+    contacto: document.getElementById("cfg-contacto").value.trim(),
+    whatsapp: document.getElementById("cfg-whatsapp").value.trim(),
+  };
+  saveConfigData(cfg);
+  toast("Configuración guardada ✓");
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function abrirModal(id=null) {
+  editingId = id;
+  document.getElementById("modal-title").textContent = id ? "Editar producto" : "Nuevo producto";
+
+  if (id) {
+    const p = productos.find(x=>x.id===id);
+    document.getElementById("m-nombre").value = p.nombre;
+    document.getElementById("m-tag").value = p.tag;
+    document.getElementById("m-filamento").value = p.filamento;
+    document.getElementById("m-insumos").value = p.insumos;
+    document.getElementById("m-tiempo").value = p.tiempo;
+    document.getElementById("m-precio").value = p.precio;
+    if (p.foto) {
+      const prev = document.getElementById("img-preview");
+      prev.src = p.foto; prev.style.display = "block";
+    }
+  } else {
+    ["m-nombre","m-tag","m-filamento","m-tiempo","m-precio"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("m-insumos").value = "0";
+    document.getElementById("img-preview").style.display = "none";
+    document.getElementById("img-preview").src = "";
+  }
+  document.getElementById("modal-overlay").classList.add("open");
+}
+
+function editarProducto(id) { abrirModal(id); }
+
+function cerrarModal() {
+  document.getElementById("modal-overlay").classList.remove("open");
+  editingId = null;
+}
+
+function cerrarModalSiOverlay(e) {
+  if (e.target === document.getElementById("modal-overlay")) cerrarModal();
+}
+
+function previewImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const prev = document.getElementById("img-preview");
+    prev.src = ev.target.result;
+    prev.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+}
+
+function guardarProducto() {
+  const nombre    = document.getElementById("m-nombre").value.trim();
+  const tag       = document.getElementById("m-tag").value.trim() || "General";
+  const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
+  const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
+  const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
+  const precio    = parseFloat(document.getElementById("m-precio").value) || 0;
+  const fotoEl    = document.getElementById("img-preview");
+  const foto      = fotoEl.style.display !== "none" ? fotoEl.src : "";
+
+  if (!nombre || !precio) {
+    if (!nombre) document.getElementById("m-nombre").classList.add("error");
+    if (!precio) document.getElementById("m-precio").classList.add("error");
+    return;
+  }
+
+  if (editingId) {
+    const idx = productos.findIndex(p=>p.id===editingId);
+    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, tag, filamento, insumos, tiempo, precio, foto };
+    toast("Producto actualizado ✓");
+  } else {
+    productos.push({ id:nextId(), nombre, tag, filamento, insumos, tiempo, precio, foto });
+    toast("Producto agregado ✓");
+  }
+
+  save(productos);
+  cerrarModal();
+  renderList();
+}
+
+function eliminarProducto(id) {
+  const p = productos.find(x=>x.id===id);
+  if (!confirm(`¿Eliminar "${p.nombre}"?`)) return;
+  productos = productos.filter(x=>x.id!==id);
+  save(productos);
+  renderList();
+  toast("Producto eliminado");
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  productos = load();
+  loadConfigUI();
+  renderList();
+}
+
+if (sessionStorage.getItem("admin_auth") === "1") init();
+</script>
+</body>
+</html>
