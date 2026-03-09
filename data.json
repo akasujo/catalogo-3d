@@ -75,14 +75,14 @@
       "tiempo": 360
     },
     {
-      "filamento": 0,
+      "filamento": 52,
       "foto": "https://i.imgur.com/adQycX6.jpeg",
       "id": 8,
-      "insumos": 0,
-      "nombre": "Pack x20 llaveros copa del mundo",
-      "precio": 22000,
-      "tag": "Llaveros",
-      "tiempo": 0
+      "insumos": 1000,
+      "nombre": "Pack x10 llaveros copa del mundo",
+      "precio": 12500,
+      "tag": "Temporada · Mundial",
+      "tiempo": 220
     }
   ]
 }
