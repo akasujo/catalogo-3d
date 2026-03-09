@@ -83,6 +83,36 @@
       "precio": 12500,
       "tag": "Temporada · Mundial",
       "tiempo": 220
+    },
+    {
+      "filamento": 104,
+      "foto": "https://i.imgur.com/adQycX6.jpeg",
+      "id": 9,
+      "insumos": 2000,
+      "nombre": "Pack x20 llaveros copa del mundo",
+      "precio": 22000,
+      "tag": "Temporada · Mundial",
+      "tiempo": 440
+    },
+    {
+      "filamento": 260,
+      "foto": "https://i.imgur.com/adQycX6.jpeg",
+      "id": 10,
+      "insumos": 5000,
+      "nombre": "Pack x50 llaveros copa del mundo",
+      "precio": 47500,
+      "tag": "Temporada · Mundial",
+      "tiempo": 1100
+    },
+    {
+      "filamento": 520,
+      "foto": "https://i.imgur.com/adQycX6.jpeg",
+      "id": 11,
+      "insumos": 10000,
+      "nombre": "Pack x100 llaveros copa del mundo",
+      "precio": 85000,
+      "tag": "Temporada · Mundial",
+      "tiempo": 2200
     }
   ]
 }
