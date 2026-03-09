@@ -73,6 +73,16 @@
       "precio": 22500,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
+    },
+    {
+      "filamento": 0,
+      "foto": "",
+      "id": 8,
+      "insumos": 0,
+      "nombre": "Pack x20 llaveros copa del mundo",
+      "precio": 22000,
+      "tag": "Llaveros",
+      "tiempo": 0
     }
   ]
 }
