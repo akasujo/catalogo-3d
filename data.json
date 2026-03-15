@@ -113,6 +113,16 @@
       "precio": 85000,
       "tag": "Temporada · Mundial",
       "tiempo": 2200
+    },
+    {
+      "filamento": 181,
+      "foto": "https://i.imgur.com/TiTGx66.jpeg",
+      "id": 12,
+      "insumos": 4000,
+      "nombre": "Velador Wavy",
+      "precio": 22500,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 360
     }
   ]
 }
