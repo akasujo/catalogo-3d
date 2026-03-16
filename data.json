@@ -123,6 +123,16 @@
       "precio": 22500,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
+    },
+    {
+      "filamento": 181,
+      "foto": "https://i.imgur.com/G6pBimC.png",
+      "id": 13,
+      "insumos": 4000,
+      "nombre": "Velador Neuquén",
+      "precio": 24000,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 700
     }
   ]
 }
