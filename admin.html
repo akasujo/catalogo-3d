@@ -225,6 +225,14 @@
         <label>Categoría / etiqueta</label>
         <input type="text" id="m-tag" placeholder="Ej: Decoración · Hogar">
       </div>
+      <div class="field full">
+        <label>Stock</label>
+        <select id="m-stock" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;color:var(--text);">
+          <option value="en-stock">En stock</option>
+          <option value="por-encargo">Por encargo</option>
+          <option value="sin-stock">Sin stock</option>
+        </select>
+      </div>
       <div class="field">
         <label>Filamento (g)</label>
         <input type="number" id="m-filamento" placeholder="Ej: 80">
@@ -397,6 +405,7 @@ function abrirModal(id=null) {
     document.getElementById("m-nombre").value       = p.nombre;
     document.getElementById("m-descripcion").value  = p.descripcion || "";
     document.getElementById("m-tag").value          = p.tag;
+    document.getElementById("m-stock").value        = p.stock || "en-stock";
     document.getElementById("m-filamento").value = p.filamento;
     document.getElementById("m-insumos").value   = p.insumos;
     document.getElementById("m-tiempo").value    = p.tiempo;
@@ -407,6 +416,7 @@ function abrirModal(id=null) {
     else { prev.style.display = "none"; prev.src = ""; }
   } else {
     ["m-nombre","m-descripcion","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
+  document.getElementById("m-stock").value = "en-stock";
     document.getElementById("m-insumos").value = "0";
     const prev = document.getElementById("img-preview");
     prev.style.display = "none"; prev.src = "";
@@ -442,6 +452,7 @@ async function guardarProducto() {
   const nombre      = document.getElementById("m-nombre").value.trim();
   const descripcion = document.getElementById("m-descripcion").value.trim();
   const tag         = document.getElementById("m-tag").value.trim() || "General";
+  const stock       = document.getElementById("m-stock").value;
   const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
   const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
   const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
@@ -457,9 +468,9 @@ async function guardarProducto() {
   const isEditing = editingId;
   if (isEditing) {
     const idx = productos.findIndex(p=>p.id===isEditing);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, filamento, insumos, tiempo, precio, foto };
+    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stock, filamento, insumos, tiempo, precio, foto };
   } else {
-    productos.push({ id:nextId(), nombre, descripcion, tag, filamento, insumos, tiempo, precio, foto });
+    productos.push({ id:nextId(), nombre, descripcion, tag, stock, filamento, insumos, tiempo, precio, foto, fechaAlta: new Date().toISOString() });
   }
 
   cerrarModal();
