@@ -568,9 +568,11 @@ async function init() {
   if (data) {
     productos = data.productos || [];
     config    = data.config    || { contacto:"", whatsapp:"" };
+    ventas    = data.ventas    || [];
   } else {
     productos = DEFAULT_DATA.productos;
     config    = DEFAULT_DATA.config;
+    ventas    = [];
   }
   // Set today as default date
   const today = new Date().toISOString().split("T")[0];
@@ -587,14 +589,7 @@ async function init() {
 if (sessionStorage.getItem("admin_auth") === "1") init();
 
 // ── VENTAS ────────────────────────────────────────────────────────────────────
-function loadVentas() {
-  try { const s = localStorage.getItem("ventas_data"); return s ? JSON.parse(s) : []; }
-  catch(e) { return []; }
-}
-
-function saveVentas(ventas) {
-  localStorage.setItem("ventas_data", JSON.stringify(ventas));
-}
+let ventas = [];
 
 function renderSelectProductos() {
   const sel = document.getElementById("v-producto");
@@ -602,7 +597,7 @@ function renderSelectProductos() {
   sel.innerHTML = productos.map(p => `<option value="${p.id}">${p.nombre}</option>`).join("");
 }
 
-function registrarVenta() {
+async function registrarVenta() {
   const pid      = parseInt(document.getElementById("v-producto").value);
   const cantidad = parseInt(document.getElementById("v-cantidad").value) || 0;
   const precio   = parseFloat(document.getElementById("v-precio").value) || 0;
@@ -610,10 +605,7 @@ function registrarVenta() {
   const fecha    = document.getElementById("v-fecha").value || new Date().toISOString().split("T")[0];
   const notas    = document.getElementById("v-notas").value.trim();
 
-  if (!cantidad || !precio) {
-    toast("Completá cantidad y precio", true);
-    return;
-  }
+  if (!cantidad || !precio) { toast("Completá cantidad y precio", true); return; }
 
   const prod = productos.find(p => p.id === pid);
   if (!prod) return;
@@ -624,8 +616,7 @@ function registrarVenta() {
     productos[idx].stockUnidades = Math.max(0, (productos[idx].stockUnidades || 0) - cantidad);
   }
 
-  // Guardar venta
-  const ventas = loadVentas();
+  // Agregar venta al array global
   ventas.push({
     id: Date.now(),
     productoId: pid,
@@ -636,32 +627,35 @@ function registrarVenta() {
     fecha,
     notas
   });
-  saveVentas(ventas);
 
   // Limpiar form
   document.getElementById("v-cantidad").value = "";
   document.getElementById("v-precio").value = "";
   document.getElementById("v-notas").value = "";
-  document.getElementById("v-fecha").value = "";
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("v-fecha").value = today;
 
-  // Guardar productos actualizados
-  ghSave({ config, productos }).then(ok => {
-    renderList();
-    renderVentas();
-    toast(ok ? "Venta registrada ✓" : "Venta guardada localmente (error GitHub)", !ok);
-  });
+  renderList();
+  renderVentas();
+  setLoading(true);
+  toast("Guardando…");
+  const ok = await ghSave({ config, productos, ventas });
+  setLoading(false);
+  toast(ok ? "Venta registrada ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
 }
 
-function eliminarVenta(id) {
+async function eliminarVenta(id) {
   if (!confirm("¿Eliminar esta venta?")) return;
-  const ventas = loadVentas().filter(v => v.id !== id);
-  saveVentas(ventas);
+  ventas = ventas.filter(v => v.id !== id);
   renderVentas();
-  toast("Venta eliminada");
+  setLoading(true);
+  toast("Guardando…");
+  const ok = await ghSave({ config, productos, ventas });
+  setLoading(false);
+  toast(ok ? "Venta eliminada ✓" : "Error al guardar", !ok);
 }
 
 function renderVentas() {
-  const ventas = loadVentas();
   const container = document.getElementById("ventas-mes");
   if (!container) return;
 
@@ -670,7 +664,6 @@ function renderVentas() {
     return;
   }
 
-  // Agrupar por mes
   const grupos = {};
   ventas.forEach(v => {
     const [y, m] = v.fecha.split("-");
@@ -680,8 +673,8 @@ function renderVentas() {
   });
 
   const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-
   const keys = Object.keys(grupos).sort().reverse();
+
   container.innerHTML = keys.map(key => {
     const [y, m] = key.split("-");
     const lista = grupos[key];
@@ -717,7 +710,6 @@ function renderVentas() {
 }
 
 function exportarExcel() {
-  const ventas = loadVentas();
   if (!ventas.length) { toast("No hay ventas para exportar", true); return; }
 
   const encabezado = ["Fecha","Producto","Cantidad","Precio Total","Canal","Notas"];
