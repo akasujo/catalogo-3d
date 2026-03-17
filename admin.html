@@ -218,6 +218,10 @@
         <input type="text" id="m-nombre" placeholder="Ej: Macetero geométrico">
       </div>
       <div class="field full">
+        <label>Descripción</label>
+        <input type="text" id="m-descripcion" placeholder="Ej: Impreso en PLA dorado, incluye argolla metálica. Ideal para regalo.">
+      </div>
+      <div class="field full">
         <label>Categoría / etiqueta</label>
         <input type="text" id="m-tag" placeholder="Ej: Decoración · Hogar">
       </div>
@@ -390,8 +394,9 @@ function abrirModal(id=null) {
   document.getElementById("modal-title").textContent = id ? "Editar producto" : "Nuevo producto";
   if (id) {
     const p = productos.find(x=>x.id===id);
-    document.getElementById("m-nombre").value    = p.nombre;
-    document.getElementById("m-tag").value       = p.tag;
+    document.getElementById("m-nombre").value       = p.nombre;
+    document.getElementById("m-descripcion").value  = p.descripcion || "";
+    document.getElementById("m-tag").value          = p.tag;
     document.getElementById("m-filamento").value = p.filamento;
     document.getElementById("m-insumos").value   = p.insumos;
     document.getElementById("m-tiempo").value    = p.tiempo;
@@ -401,7 +406,7 @@ function abrirModal(id=null) {
     if (p.foto) { prev.src = p.foto; prev.style.display = "block"; }
     else { prev.style.display = "none"; prev.src = ""; }
   } else {
-    ["m-nombre","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
+    ["m-nombre","m-descripcion","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
     document.getElementById("m-insumos").value = "0";
     const prev = document.getElementById("img-preview");
     prev.style.display = "none"; prev.src = "";
@@ -434,8 +439,9 @@ function previewImageUrl() {
 }
 
 async function guardarProducto() {
-  const nombre    = document.getElementById("m-nombre").value.trim();
-  const tag       = document.getElementById("m-tag").value.trim() || "General";
+  const nombre      = document.getElementById("m-nombre").value.trim();
+  const descripcion = document.getElementById("m-descripcion").value.trim();
+  const tag         = document.getElementById("m-tag").value.trim() || "General";
   const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
   const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
   const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
@@ -451,9 +457,9 @@ async function guardarProducto() {
   const isEditing = editingId;
   if (isEditing) {
     const idx = productos.findIndex(p=>p.id===isEditing);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, tag, filamento, insumos, tiempo, precio, foto };
+    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, filamento, insumos, tiempo, precio, foto };
   } else {
-    productos.push({ id:nextId(), nombre, tag, filamento, insumos, tiempo, precio, foto });
+    productos.push({ id:nextId(), nombre, descripcion, tag, filamento, insumos, tiempo, precio, foto });
   }
 
   cerrarModal();
