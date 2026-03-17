@@ -292,7 +292,7 @@ function renderCards() {
       <div class="card-img-wrap">${imgHTML}</div>
       ${stockHTML}
       <div class="card-tag">${p.tag}</div>
-      <div class="card-name">${p.nombre}</div>
+      <a href="producto.html?id=${p.id}" class="card-name" style="text-decoration:none;color:inherit;display:block;">${p.nombre}</a>
       ${descHTML}
       <div class="card-price-row">
         <span class="price-label">Precio</span>
@@ -344,7 +344,8 @@ function getSorted(list) {
 }
 
 function shareProduct(id, nombre) {
-  const url = window.location.href.split("?")[0] + "?producto=" + id;
+  const base = window.location.href.split("/").slice(0,-1).join("/");
+  const url = base + "/producto.html?id=" + id;
   navigator.clipboard.writeText(url).then(() => {
     const t = document.getElementById("share-toast");
     t.classList.add("show");
