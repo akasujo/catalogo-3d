@@ -50,6 +50,11 @@
   .section-header { display:flex; align-items:baseline; justify-content:space-between; border-top:2px solid var(--text); padding-top:12px; margin-bottom:24px; margin-top:40px; }
   .section-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:48px; text-transform:uppercase; line-height:1; }
 
+  .search-bar { margin-bottom:16px; }
+  .search-input { width:100%; background:var(--white); border:none; border-bottom:2px solid var(--text); padding:12px 4px; font-family:'Barlow',sans-serif; font-size:15px; color:var(--text); outline:none; transition:border-color 0.15s; }
+  .search-input::placeholder { color:var(--border); }
+  .search-input:focus { border-bottom-color:var(--green); }
+
   .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
   .filter-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:6px 14px; cursor:pointer; transition:all 0.15s; }
   .filter-btn:hover, .filter-btn.active { background:var(--text); border-color:var(--text); color:var(--white); }
@@ -185,6 +190,9 @@
     <span class="section-title">PRODUCTOS</span>
   </div>
 
+  <div class="search-bar">
+    <input type="text" class="search-input" id="search-input" placeholder="Buscar producto…" oninput="renderCards()">
+  </div>
   <div class="sort-bar">
     <span class="sort-label">Ordenar:</span>
     <button class="sort-btn active" id="sort-default" onclick="setSort('default')">Por defecto</button>
@@ -253,8 +261,10 @@ function renderFilters() {
 function renderCards() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
+  const query = (document.getElementById("search-input")?.value || "").toLowerCase().trim();
   const base = filtroActivo === "Todos" ? productos : productos.filter(p=>p.tag===filtroActivo);
-  const filtered = getSorted(base);
+  const searched = query ? base.filter(p => p.nombre.toLowerCase().includes(query) || (p.descripcion||"").toLowerCase().includes(query)) : base;
+  const filtered = getSorted(searched);
 
   if (!filtered.length) {
     grid.innerHTML = `<div class="no-results">No hay productos en esta categoría</div>`;
