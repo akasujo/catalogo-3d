@@ -12,7 +12,7 @@
       "insumos": 100,
       "nombre": "Llavero Copa del Mundo 2026",
       "precio": 2000,
-      "stockUnidades": 43,
+      "stockUnidades": 42,
       "tag": "Temporada · Mundial",
       "tiempo": 22
     },
@@ -90,7 +90,7 @@
       "insumos": 4000,
       "nombre": "Velador Wavy",
       "precio": 22500,
-      "stockUnidades": 0,
+      "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
     },
@@ -112,11 +112,11 @@
       "canal": "WhatsApp",
       "cantidad": 1,
       "fecha": "2026-03-17",
-      "id": 1773754473961,
+      "id": 1773754540416,
       "notas": "",
-      "precio": 22500,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
+      "precio": 2000,
+      "productoId": 1,
+      "productoNombre": "Llavero Copa del Mundo 2026"
     }
   ]
 }
