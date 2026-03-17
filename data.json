@@ -90,7 +90,7 @@
       "insumos": 4000,
       "nombre": "Velador Wavy",
       "precio": 22500,
-      "stockUnidades": 1,
+      "stockUnidades": 0,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
     },
@@ -105,6 +105,18 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 700
+    }
+  ],
+  "ventas": [
+    {
+      "canal": "WhatsApp",
+      "cantidad": 1,
+      "fecha": "2026-03-17",
+      "id": 1773754473961,
+      "notas": "",
+      "precio": 22500,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
     }
   ]
 }
