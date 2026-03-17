@@ -5,12 +5,14 @@
   },
   "productos": [
     {
+      "descripcion": "",
       "filamento": 5.2,
       "foto": "https://i.imgur.com/adQycX6.jpeg",
       "id": 1,
       "insumos": 100,
       "nombre": "Llavero Copa del Mundo 2026",
       "precio": 2000,
+      "stockUnidades": 43,
       "tag": "Temporada · Mundial",
       "tiempo": 22
     },
