@@ -105,7 +105,21 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 700
+    },
+    {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-17T23:10:02.353Z",
+      "filamento": 175,
+      "foto": "https://i.imgur.com/anr7xdp.jpeg",
+      "id": 14,
+      "insumos": 4000,
+      "nombre": "Velador Coral | Naranja",
+      "precio": 22500,
+      "stockUnidades": 1,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 360
     }
-  ],
-  "ventas": []
+  ]
 }
