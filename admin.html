@@ -131,6 +131,25 @@
 
   footer { border-top:1px solid var(--border); padding:24px 0; color:var(--muted); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-top:48px; }
 
+  /* Ventas */
+  .venta-form { background:var(--white); border:1px solid var(--border); padding:24px; margin-bottom:40px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .venta-form .full { grid-column:1/-1; }
+  select.field-select { background:transparent; border:none; border-bottom:2px solid var(--border); padding:9px 4px; font-family:'Barlow',sans-serif; font-size:14px; font-weight:500; outline:none; width:100%; color:var(--text); }
+  .ventas-mes { margin-bottom:40px; }
+  .mes-header { display:flex; align-items:baseline; justify-content:space-between; border-top:1px solid var(--border); padding:10px 0; margin-top:16px; cursor:pointer; }
+  .mes-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; }
+  .mes-resumen { font-size:11px; color:var(--muted); }
+  .ventas-table { width:100%; border-collapse:collapse; margin-bottom:8px; }
+  .ventas-table th { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); background:var(--bg); }
+  .ventas-table td { font-size:12px; padding:10px 12px; border-bottom:1px solid var(--border); background:var(--white); }
+  .ventas-table tr:last-child td { border-bottom:none; }
+  .btn-delete-venta { background:none; border:none; color:var(--border); cursor:pointer; font-size:13px; transition:color 0.15s; }
+  .btn-delete-venta:hover { color:var(--red); }
+  .btn-export { background:var(--green-bg,#EAF3EC); border:1px solid var(--green); color:var(--green); font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:8px 16px; cursor:pointer; transition:all 0.15s; }
+  .btn-export:hover { background:var(--green); color:#fff; }
+  .stock-num { font-size:11px; color:var(--muted); }
+  .stock-low { color:var(--red); font-weight:600; }
+
   @media(max-width:600px) {
     .product-row { grid-template-columns:40px 1fr 100px 32px; }
     .pr-cell.hide-mobile { display:none; }
@@ -203,6 +222,55 @@
 
   </div>
 
+    <!-- Ventas -->
+    <div class="section-header">
+      <span class="section-title">REGISTRAR VENTA</span>
+    </div>
+    <div class="venta-form">
+      <div class="field full">
+        <label>Producto</label>
+        <select id="v-producto" class="field-select"></select>
+      </div>
+      <div class="field">
+        <label>Cantidad vendida</label>
+        <input type="number" id="v-cantidad" placeholder="Ej: 5" min="1" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;">
+      </div>
+      <div class="field">
+        <label>Precio total cobrado ($)</label>
+        <input type="number" id="v-precio" placeholder="Ej: 12500" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;">
+      </div>
+      <div class="field">
+        <label>Canal de venta</label>
+        <select id="v-canal" class="field-select">
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Marketplace">Marketplace</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Presencial">Presencial</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fecha</label>
+        <input type="date" id="v-fecha" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;">
+      </div>
+      <div class="field full">
+        <label>Notas (opcional)</label>
+        <input type="text" id="v-notas" placeholder="Ej: Cliente pidió envío, regalo de cumpleaños..." style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;">
+      </div>
+      <div class="full" style="display:flex;justify-content:flex-end;">
+        <button class="btn-save" onclick="registrarVenta()">Registrar venta</button>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="section-header">
+      <span class="section-title">HISTORIAL DE VENTAS</span>
+      <button class="btn-export" onclick="exportarExcel()">Exportar Excel</button>
+    </div>
+    <div class="ventas-mes" id="ventas-mes"></div>
+
+  </div>
+
   <footer>
     <div class="container">Panel de administración · Impresión 3D Argentina</div>
   </footer>
@@ -225,13 +293,9 @@
         <label>Categoría / etiqueta</label>
         <input type="text" id="m-tag" placeholder="Ej: Decoración · Hogar">
       </div>
-      <div class="field full">
-        <label>Stock</label>
-        <select id="m-stock" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;color:var(--text);">
-          <option value="en-stock">En stock</option>
-          <option value="por-encargo">Por encargo</option>
-          <option value="sin-stock">Sin stock</option>
-        </select>
+      <div class="field">
+        <label>Stock (unidades)</label>
+        <input type="number" id="m-stock" placeholder="Ej: 50" min="0">
       </div>
       <div class="field">
         <label>Filamento (g)</label>
@@ -364,6 +428,8 @@ function renderList() {
     const imgHTML = p.foto
       ? `<img class="pr-img" src="${p.foto}" alt="${p.nombre}">`
       : `<div class="pr-img-placeholder">📦</div>`;
+    const stockNum = p.stockUnidades || 0;
+    const stockColor = stockNum === 0 ? "var(--red)" : stockNum === 1 ? "var(--red)" : stockNum <= 5 ? "#B07D00" : "var(--green)";
     row.innerHTML = `
       <div class="pr-cell center">${imgHTML}</div>
       <div class="pr-cell">
@@ -371,7 +437,7 @@ function renderList() {
         <div class="pr-tag">${p.tag}</div>
       </div>
       <div class="pr-cell center hide-mobile"><span class="pr-price">${fmt(p.precio)}</span></div>
-      <div class="pr-cell center hide-mobile" style="font-size:12px;color:var(--muted)">${p.filamento}g · ${p.tiempo}min</div>
+      <div class="pr-cell center hide-mobile" style="font-size:12px;color:${stockColor};font-weight:600">Stock: ${stockNum}</div>
       <div class="pr-cell center" style="display:flex;gap:4px;justify-content:center">
         <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})">✏️</button>
         <button class="btn-icon" onclick="eliminarProducto(${p.id})">✕</button>
@@ -405,7 +471,7 @@ function abrirModal(id=null) {
     document.getElementById("m-nombre").value       = p.nombre;
     document.getElementById("m-descripcion").value  = p.descripcion || "";
     document.getElementById("m-tag").value          = p.tag;
-    document.getElementById("m-stock").value        = p.stock || "en-stock";
+    document.getElementById("m-stock").value        = p.stockUnidades || 0;
     document.getElementById("m-filamento").value = p.filamento;
     document.getElementById("m-insumos").value   = p.insumos;
     document.getElementById("m-tiempo").value    = p.tiempo;
@@ -416,7 +482,7 @@ function abrirModal(id=null) {
     else { prev.style.display = "none"; prev.src = ""; }
   } else {
     ["m-nombre","m-descripcion","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
-  document.getElementById("m-stock").value = "en-stock";
+  document.getElementById("m-stock").value = 0;
     document.getElementById("m-insumos").value = "0";
     const prev = document.getElementById("img-preview");
     prev.style.display = "none"; prev.src = "";
@@ -452,7 +518,7 @@ async function guardarProducto() {
   const nombre      = document.getElementById("m-nombre").value.trim();
   const descripcion = document.getElementById("m-descripcion").value.trim();
   const tag         = document.getElementById("m-tag").value.trim() || "General";
-  const stock       = document.getElementById("m-stock").value;
+  const stockUnidades = parseInt(document.getElementById("m-stock").value) || 0;
   const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
   const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
   const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
@@ -468,9 +534,9 @@ async function guardarProducto() {
   const isEditing = editingId;
   if (isEditing) {
     const idx = productos.findIndex(p=>p.id===isEditing);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stock, filamento, insumos, tiempo, precio, foto };
+    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, foto };
   } else {
-    productos.push({ id:nextId(), nombre, descripcion, tag, stock, filamento, insumos, tiempo, precio, foto, fechaAlta: new Date().toISOString() });
+    productos.push({ id:nextId(), nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, foto, fechaAlta: new Date().toISOString() });
   }
 
   cerrarModal();
@@ -506,12 +572,169 @@ async function init() {
     productos = DEFAULT_DATA.productos;
     config    = DEFAULT_DATA.config;
   }
+  // Set today as default date
+  const today = new Date().toISOString().split("T")[0];
+  const fechaEl = document.getElementById("v-fecha");
+  if (fechaEl) fechaEl.value = today;
+
   loadConfigUI();
   renderList();
+  renderSelectProductos();
+  renderVentas();
   toast("Listo ✓");
 }
 
 if (sessionStorage.getItem("admin_auth") === "1") init();
+
+// ── VENTAS ────────────────────────────────────────────────────────────────────
+function loadVentas() {
+  try { const s = localStorage.getItem("ventas_data"); return s ? JSON.parse(s) : []; }
+  catch(e) { return []; }
+}
+
+function saveVentas(ventas) {
+  localStorage.setItem("ventas_data", JSON.stringify(ventas));
+}
+
+function renderSelectProductos() {
+  const sel = document.getElementById("v-producto");
+  if (!sel) return;
+  sel.innerHTML = productos.map(p => `<option value="${p.id}">${p.nombre}</option>`).join("");
+}
+
+function registrarVenta() {
+  const pid      = parseInt(document.getElementById("v-producto").value);
+  const cantidad = parseInt(document.getElementById("v-cantidad").value) || 0;
+  const precio   = parseFloat(document.getElementById("v-precio").value) || 0;
+  const canal    = document.getElementById("v-canal").value;
+  const fecha    = document.getElementById("v-fecha").value || new Date().toISOString().split("T")[0];
+  const notas    = document.getElementById("v-notas").value.trim();
+
+  if (!cantidad || !precio) {
+    toast("Completá cantidad y precio", true);
+    return;
+  }
+
+  const prod = productos.find(p => p.id === pid);
+  if (!prod) return;
+
+  // Restar del stock
+  const idx = productos.findIndex(p => p.id === pid);
+  if (idx >= 0) {
+    productos[idx].stockUnidades = Math.max(0, (productos[idx].stockUnidades || 0) - cantidad);
+  }
+
+  // Guardar venta
+  const ventas = loadVentas();
+  ventas.push({
+    id: Date.now(),
+    productoId: pid,
+    productoNombre: prod.nombre,
+    cantidad,
+    precio,
+    canal,
+    fecha,
+    notas
+  });
+  saveVentas(ventas);
+
+  // Limpiar form
+  document.getElementById("v-cantidad").value = "";
+  document.getElementById("v-precio").value = "";
+  document.getElementById("v-notas").value = "";
+  document.getElementById("v-fecha").value = "";
+
+  // Guardar productos actualizados
+  ghSave({ config, productos }).then(ok => {
+    renderList();
+    renderVentas();
+    toast(ok ? "Venta registrada ✓" : "Venta guardada localmente (error GitHub)", !ok);
+  });
+}
+
+function eliminarVenta(id) {
+  if (!confirm("¿Eliminar esta venta?")) return;
+  const ventas = loadVentas().filter(v => v.id !== id);
+  saveVentas(ventas);
+  renderVentas();
+  toast("Venta eliminada");
+}
+
+function renderVentas() {
+  const ventas = loadVentas();
+  const container = document.getElementById("ventas-mes");
+  if (!container) return;
+
+  if (!ventas.length) {
+    container.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:24px 0;">No hay ventas registradas todavía.</div>`;
+    return;
+  }
+
+  // Agrupar por mes
+  const grupos = {};
+  ventas.forEach(v => {
+    const [y, m] = v.fecha.split("-");
+    const key = `${y}-${m}`;
+    if (!grupos[key]) grupos[key] = [];
+    grupos[key].push(v);
+  });
+
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  const keys = Object.keys(grupos).sort().reverse();
+  container.innerHTML = keys.map(key => {
+    const [y, m] = key.split("-");
+    const lista = grupos[key];
+    const totalUnidades = lista.reduce((s,v) => s + v.cantidad, 0);
+    const totalPesos = lista.reduce((s,v) => s + v.precio, 0);
+    const mesNombre = meses[parseInt(m) - 1] + " " + y;
+
+    const filas = lista.sort((a,b) => b.fecha.localeCompare(a.fecha)).map(v => `
+      <tr>
+        <td>${v.fecha}</td>
+        <td>${v.productoNombre}</td>
+        <td style="text-align:center">${v.cantidad}</td>
+        <td>${fmt(v.precio)}</td>
+        <td>${v.canal}</td>
+        <td style="color:var(--muted)">${v.notas || "—"}</td>
+        <td style="text-align:center"><button class="btn-delete-venta" onclick="eliminarVenta(${v.id})">✕</button></td>
+      </tr>`).join("");
+
+    return `
+      <div style="margin-bottom:32px;">
+        <div class="mes-header">
+          <span class="mes-title">${mesNombre}</span>
+          <span class="mes-resumen">${totalUnidades} unidades · ${fmt(totalPesos)}</span>
+        </div>
+        <table class="ventas-table">
+          <thead><tr>
+            <th>Fecha</th><th>Producto</th><th>Cant.</th><th>Total</th><th>Canal</th><th>Notas</th><th></th>
+          </tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>`;
+  }).join("");
+}
+
+function exportarExcel() {
+  const ventas = loadVentas();
+  if (!ventas.length) { toast("No hay ventas para exportar", true); return; }
+
+  const encabezado = ["Fecha","Producto","Cantidad","Precio Total","Canal","Notas"];
+  const filas = ventas.sort((a,b) => b.fecha.localeCompare(a.fecha)).map(v =>
+    [v.fecha, v.productoNombre, v.cantidad, v.precio, v.canal, v.notas || ""]
+  );
+
+  const csv = [encabezado, ...filas].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `ventas_rems_${new Date().toISOString().split("T")[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Exportado ✓");
+}
 </script>
 </body>
 </html>
