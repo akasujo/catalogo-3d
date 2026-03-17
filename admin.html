@@ -313,6 +313,14 @@
         <label>Precio de venta ($)</label>
         <input type="number" id="m-precio" placeholder="Ej: 8000">
       </div>
+      <div class="field">
+        <label>Descuento fijo ($)</label>
+        <input type="number" id="m-descuento" placeholder="Ej: 2000 (opcional)" min="0">
+      </div>
+      <div class="field">
+        <label>Descuento válido hasta</label>
+        <input type="date" id="m-descuento-fecha" style="background:transparent;border:none;border-bottom:2px solid var(--border);padding:9px 4px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;width:100%;">
+      </div>
       <div class="field full">
         <label>URL de la foto (Imgur)</label>
         <input type="url" id="m-foto-url" placeholder="https://i.imgur.com/xxxxxxx.jpg" oninput="previewImageUrl()">
@@ -436,7 +444,10 @@ function renderList() {
         <div class="pr-name">${p.nombre}</div>
         <div class="pr-tag">${p.tag}</div>
       </div>
-      <div class="pr-cell center hide-mobile"><span class="pr-price">${fmt(p.precio)}</span></div>
+      <div class="pr-cell center hide-mobile">
+        <span class="pr-price">${fmt(p.precio)}</span>
+        ${p.descuento && p.descuentoFecha && new Date(p.descuentoFecha) >= new Date() ? `<span style="font-size:10px;color:var(--red);display:block;margin-top:2px;">-${fmt(p.descuento)} hasta ${p.descuentoFecha}</span>` : ""}
+      </div>
       <div class="pr-cell center hide-mobile" style="font-size:12px;color:${stockColor};font-weight:600">Stock: ${stockNum}</div>
       <div class="pr-cell center" style="display:flex;gap:4px;justify-content:center">
         <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})">✏️</button>
@@ -475,13 +486,15 @@ function abrirModal(id=null) {
     document.getElementById("m-filamento").value = p.filamento;
     document.getElementById("m-insumos").value   = p.insumos;
     document.getElementById("m-tiempo").value    = p.tiempo;
-    document.getElementById("m-precio").value    = p.precio;
-    document.getElementById("m-foto-url").value  = p.foto || "";
+    document.getElementById("m-precio").value          = p.precio;
+    document.getElementById("m-descuento").value       = p.descuento || "";
+    document.getElementById("m-descuento-fecha").value = p.descuentoFecha || "";
+    document.getElementById("m-foto-url").value        = p.foto || "";
     const prev = document.getElementById("img-preview");
     if (p.foto) { prev.src = p.foto; prev.style.display = "block"; }
     else { prev.style.display = "none"; prev.src = ""; }
   } else {
-    ["m-nombre","m-descripcion","m-tag","m-filamento","m-tiempo","m-precio","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
+    ["m-nombre","m-descripcion","m-tag","m-filamento","m-insumos","m-tiempo","m-precio","m-descuento","m-descuento-fecha","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
   document.getElementById("m-stock").value = 0;
     document.getElementById("m-insumos").value = "0";
     const prev = document.getElementById("img-preview");
@@ -522,8 +535,10 @@ async function guardarProducto() {
   const filamento = parseFloat(document.getElementById("m-filamento").value) || 0;
   const insumos   = parseFloat(document.getElementById("m-insumos").value) || 0;
   const tiempo    = parseFloat(document.getElementById("m-tiempo").value) || 0;
-  const precio    = parseFloat(document.getElementById("m-precio").value) || 0;
-  const foto      = document.getElementById("m-foto-url").value.trim();
+  const precio          = parseFloat(document.getElementById("m-precio").value) || 0;
+  const descuento       = parseFloat(document.getElementById("m-descuento").value) || 0;
+  const descuentoFecha  = document.getElementById("m-descuento-fecha").value || "";
+  const foto            = document.getElementById("m-foto-url").value.trim();
 
   if (!nombre || !precio) {
     if (!nombre) document.getElementById("m-nombre").classList.add("error");
@@ -534,9 +549,9 @@ async function guardarProducto() {
   const isEditing = editingId;
   if (isEditing) {
     const idx = productos.findIndex(p=>p.id===isEditing);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, foto };
+    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, descuento, descuentoFecha, foto };
   } else {
-    productos.push({ id:nextId(), nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, foto, fechaAlta: new Date().toISOString() });
+    productos.push({ id:nextId(), nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, descuento, descuentoFecha, foto, fechaAlta: new Date().toISOString() });
   }
 
   cerrarModal();
