@@ -29,12 +29,14 @@
       "tiempo": 140
     },
     {
+      "descripcion": "",
       "filamento": 70,
       "foto": "https://i.imgur.com/pMZ9LaG.png",
       "id": 3,
       "insumos": 0,
       "nombre": "Copa del Mundo 15cm",
       "precio": 6000,
+      "stockUnidades": 1,
       "tag": "Temporada · Mundial",
       "tiempo": 150
     },
