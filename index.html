@@ -271,8 +271,12 @@ function renderCards() {
     const newBadge = isNew ? `<div class="badge-new">Nuevo</div>` : "";
 
     // Stock
-    const stockMap = { "en-stock": ["En stock","stock-en-stock"], "por-encargo": ["Por encargo","stock-por-encargo"], "sin-stock": ["Sin stock","stock-sin-stock"] };
-    const [stockLabel, stockClass] = stockMap[p.stock] || ["En stock","stock-en-stock"];
+    const s = p.stockUnidades;
+    let stockLabel, stockClass;
+    if (s === undefined || s === null) { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
+    else if (s === 0) { stockLabel = "Sin stock"; stockClass = "stock-sin-stock"; }
+    else if (s === 1) { stockLabel = "Última unidad"; stockClass = "stock-sin-stock"; }
+    else { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
     const stockHTML = `<div class="stock-badge ${stockClass}">${stockLabel}</div>`;
 
     const imgHTML = p.foto
