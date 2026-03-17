@@ -71,12 +71,14 @@
       "tiempo": 120
     },
     {
+      "descripcion": "",
       "filamento": 175,
       "foto": "https://i.imgur.com/ibaGYpc.jpeg",
       "id": 7,
       "insumos": 4000,
       "nombre": "Velador Coral | Azul",
       "precio": 22500,
+      "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
     },
