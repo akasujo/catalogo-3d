@@ -280,7 +280,7 @@ function renderCards() {
     const stockHTML = `<div class="stock-badge ${stockClass}">${stockLabel}</div>`;
 
     const imgHTML = p.foto
-      ? `<img src="${p.foto}" alt="${p.nombre}" onclick="openLightbox('${p.foto}', '${p.nombre}')">`
+      ? `<img src="${p.foto}" alt="${p.nombre}" onclick="window.location.href='producto.html?id=${p.id}'" style="cursor:pointer;">`
       : `<div class="card-img-placeholder">🖨️</div>`;
     const descHTML = p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : "";
     const wspMsg = encodeURIComponent("Hola! Me interesa el producto: " + p.nombre);
