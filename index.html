@@ -3,124 +3,396 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>rems. · Impresión 3D</title>
+<title>Catálogo — Impresión 3D</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #E8E6E1;
+    --bg2: #DEDAD4;
     --border: #C8C4BC;
     --text: #111111;
     --muted: #888880;
+    --green: #2A6B3A;
+    --red: #8B2020;
     --white: #F2F0EB;
-    --green: #25D366;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background:var(--bg); color:var(--text);
-    font-family:'Barlow',sans-serif;
-    min-height:100vh; display:flex; flex-direction:column;
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
+  .container { max-width:1080px; margin:0 auto; padding:0 32px; }
+
+  header { padding:56px 0 40px; border-bottom:2px solid var(--text); }
+  .header-inner { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; }
+  .brand-eyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .brand-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(64px,10vw,120px); line-height:0.85; text-transform:uppercase; }
+  .brand-title .accent { display:block; font-weight:300; font-size:0.38em; letter-spacing:0.05em; color:var(--muted); font-family:'Barlow',sans-serif; text-transform:uppercase; margin-top:6px; }
+
+  .header-right { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+  .contact-info { text-align:right; }
+  .contact-info p { font-size:12px; color:var(--muted); line-height:1.8; }
+  .contact-info strong { color:var(--text); font-weight:500; }
+  .btn-instagram {
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--text); color:var(--white);
+    font-family:'Barlow Condensed',sans-serif; font-weight:700;
+    font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:10px 20px; text-decoration:none; border:2px solid var(--text);
+    transition:all 0.15s; margin-top:12px;
+  }
+  .btn-instagram:hover { background:transparent; color:var(--text); }
+  .btn-instagram svg { width:16px; height:16px; fill:currentColor; }
+
+  .stats-bar { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--border); border-top:2px solid var(--text); margin:40px 0; background:var(--white); }
+  .stat { padding:20px 24px; border-right:1px solid var(--border); }
+  .stat:last-child { border-right:none; }
+  .stat-value { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:32px; line-height:1; }
+  .stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; margin-top:5px; }
+
+  .section-header { display:flex; align-items:baseline; justify-content:space-between; border-top:2px solid var(--text); padding-top:12px; margin-bottom:24px; margin-top:40px; }
+  .section-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:48px; text-transform:uppercase; line-height:1; }
+
+  .search-bar { margin-bottom:16px; }
+  .search-input { width:100%; background:var(--white); border:none; border-bottom:2px solid var(--text); padding:12px 4px; font-family:'Barlow',sans-serif; font-size:15px; color:var(--text); outline:none; transition:border-color 0.15s; }
+  .search-input::placeholder { color:var(--border); }
+  .search-input:focus { border-bottom-color:var(--green); }
+
+  .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+  .filter-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:6px 14px; cursor:pointer; transition:all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { background:var(--text); border-color:var(--text); color:var(--white); }
+
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:64px; }
+
+  .card { background:var(--white); padding:28px 24px 24px; position:relative; transition:background 0.15s; cursor:default; }
+  .card:hover { background:var(--bg2); }
+
+  .card-img-wrap { width:100%; aspect-ratio:4/3; background:var(--bg); margin-bottom:16px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .card-img-wrap img { width:100%; height:100%; object-fit:cover; }
+  .card-img-placeholder { font-size:32px; opacity:0.3; }
+
+  .card-tag { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .card-name { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; line-height:1.1; margin-bottom:16px; letter-spacing:0.01em; }
+
+  .card-price-row { display:flex; align-items:baseline; justify-content:space-between; border-top:1px solid var(--border); padding-top:14px; }
+  .price-label { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); }
+  .price-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:28px; color:var(--green); line-height:1; }
+
+  .card-desc { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:14px; }
+
+  /* Etiqueta NUEVO */
+  .badge-new { position:absolute; top:12px; left:12px; background:#E63946; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:3px 8px; z-index:2; }
+
+  /* Indicador de stock */
+  .stock-badge { display:inline-block; font-size:9px; text-transform:uppercase; letter-spacing:0.12em; font-weight:600; padding:3px 8px; margin-bottom:10px; }
+  .stock-en-stock { background:#EAF3EC; color:#2A6B3A; }
+  .stock-por-encargo { background:#FFF8E1; color:#B07D00; }
+  .stock-sin-stock { background:#FFEBEE; color:#8B2020; }
+
+  /* Sort bar */
+  .sort-bar { display:flex; align-items:center; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  .sort-label { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); }
+  .sort-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:6px 14px; cursor:pointer; transition:all 0.15s; }
+  .sort-btn:hover, .sort-btn.active { background:var(--text); border-color:var(--text); color:var(--white); }
+
+  /* Compartir */
+  .btn-share { display:flex; align-items:center; justify-content:center; gap:6px; background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:8px; cursor:pointer; width:100%; margin-top:8px; transition:all 0.15s; }
+  .btn-share:hover { border-color:var(--text); color:var(--text); }
+  .btn-share svg { width:13px; height:13px; fill:currentColor; }
+
+  /* Toast compartir */
+  .share-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--text); color:var(--white); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 20px; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:300; }
+  .share-toast.show { opacity:1; }
+  .price-original { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:18px; color:var(--muted); text-decoration:line-through; line-height:1; }
+  .price-discount-badge { background:#E63946; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; margin-left:6px; vertical-align:middle; }
+  .btn-wsp {
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    background:#25D366; color:#fff; border:none; width:100%;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px;
+    letter-spacing:0.08em; text-transform:uppercase; padding:10px;
+    cursor:pointer; text-decoration:none; margin-top:12px; transition:background 0.15s;
+  }
+  .btn-wsp:hover { background:#1da851; }
+  .btn-wsp svg { width:15px; height:15px; fill:#fff; flex-shrink:0; }
+  .no-results { grid-column:1/-1; padding:48px; text-align:center; color:var(--muted); font-size:13px; letter-spacing:0.05em; text-transform:uppercase; background:var(--white); }
+
+  footer { border-top:1px solid var(--border); padding:24px 0; color:var(--muted); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; }
+
+  @media(max-width:700px) {
+    .grid { grid-template-columns:1fr; }
+    .stats-bar { grid-template-columns:1fr 1fr; }
+    .header-inner { flex-direction:column; align-items:flex-start; }
+    .header-right { align-items:flex-start; }
   }
 
-  .page {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    padding:48px 32px; text-align:center;
-  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .card { animation:fadeIn 0.3s ease both; }
 
-  .eyebrow {
-    font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
-    color:var(--muted); margin-bottom:16px;
+  /* ── LIGHTBOX ── */
+  .lightbox-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:500;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity 0.2s;
+    cursor:zoom-out;
   }
-
-  .brand {
-    font-family:'Barlow Condensed',sans-serif; font-weight:900;
-    font-size:clamp(80px,18vw,180px); line-height:0.85;
-    text-transform:uppercase; margin-bottom:8px;
+  .lightbox-overlay.open { opacity:1; pointer-events:all; }
+  .lightbox-overlay img {
+    max-width:90vw; max-height:90vh; object-fit:contain;
+    transform:scale(0.92); transition:transform 0.2s;
+    cursor:default;
   }
-
-  .tagline {
-    font-size:13px; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--muted); margin-bottom:56px;
+  .lightbox-overlay.open img { transform:scale(1); }
+  .lightbox-close {
+    position:fixed; top:20px; right:24px; color:#fff; font-size:32px;
+    cursor:pointer; line-height:1; opacity:0.7; transition:opacity 0.15s;
+    background:none; border:none;
   }
-
-  .buttons {
-    display:grid; grid-template-columns:1fr 1fr;
-    gap:12px; width:100%; max-width:520px;
-  }
-
-  .btn {
-    display:flex; flex-direction:column; align-items:center;
-    justify-content:center; gap:8px;
-    padding:32px 24px; text-decoration:none;
-    border:2px solid var(--text); color:var(--text);
-    font-family:'Barlow Condensed',sans-serif;
-    transition:all 0.15s; cursor:pointer;
-  }
-  .btn:hover { background:var(--text); color:var(--white); }
-
-  .btn-primary { background:var(--text); color:var(--white); }
-  .btn-primary:hover { background:#333; border-color:#333; }
-
-  .btn-icon { font-size:28px; line-height:1; }
-  .btn-label { font-weight:900; font-size:22px; letter-spacing:0.04em; text-transform:uppercase; }
-  .btn-sub { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; opacity:0.6; font-family:'Barlow',sans-serif; font-weight:400; }
-
-  .social-row {
-    display:flex; gap:16px; margin-top:48px; align-items:center;
-  }
-  .social-link {
-    display:inline-flex; align-items:center; gap:6px;
-    color:var(--muted); font-size:11px; letter-spacing:0.1em;
-    text-transform:uppercase; text-decoration:none; transition:color 0.15s;
-  }
-  .social-link:hover { color:var(--text); }
-  .social-link svg { width:14px; height:14px; fill:currentColor; }
-
-  footer {
-    border-top:1px solid var(--border); padding:20px 32px;
-    color:var(--muted); font-size:10px; letter-spacing:0.08em;
-    text-transform:uppercase; text-align:center;
-  }
-
-  @media(max-width:480px) {
-    .buttons { grid-template-columns:1fr; max-width:320px; }
-    .brand { font-size:clamp(72px,22vw,140px); }
-  }
+  .lightbox-close:hover { opacity:1; }
+  .card-img-wrap img { cursor:zoom-in; }
 </style>
 </head>
 <body>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        
+        <div class="brand-title">
+          CATÁLOGO
+          
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="contact-info" id="contact-info"></div>
+        <a href="https://instagram.com/rems.arg" target="_blank" class="btn-instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @rems.arg
+        </a>
+        <a href="https://wa.me/5491170650288" target="_blank" class="btn-instagram" style="background:#25D366;border-color:#25D366;color:#fff;margin-top:8px;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </header>
 
-<div class="page">
-  <div class="eyebrow">Argentina · Impresión 3D</div>
-  <div class="brand">rems.</div>
-  <div class="tagline">Diseño y fabricación 3D a pedido</div>
-
-  <div class="buttons">
-    <a href="index.html" class="btn btn-primary">
-      <div class="btn-icon">🛍️</div>
-      <div class="btn-label">Catálogo</div>
-      <div class="btn-sub">Ver productos</div>
-    </a>
-    <a href="pedido.html" class="btn">
-      <div class="btn-icon">✏️</div>
-      <div class="btn-label">Pedido</div>
-      <div class="btn-sub">Personalizado</div>
-    </a>
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value" id="stat-productos">—</div>
+      <div class="stat-label">Productos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-categorias">—</div>
+      <div class="stat-label">Categorías</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-desde">—</div>
+      <div class="stat-label">Desde</div>
+    </div>
   </div>
 
-  <div class="social-row">
-    <a href="https://instagram.com/rems.arg" target="_blank" class="social-link">
-      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      @rems.arg
-    </a>
-    <a href="https://wa.me/5491170650288" target="_blank" class="social-link">
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      WhatsApp
-    </a>
+  <div class="section-header">
+    <span class="section-title">PRODUCTOS</span>
   </div>
+
+  <div class="search-bar">
+    <input type="text" class="search-input" id="search-input" placeholder="Buscar producto…" oninput="renderCards()">
+  </div>
+  <div class="sort-bar">
+    <span class="sort-label">Ordenar:</span>
+    <button class="sort-btn active" id="sort-default" onclick="setSort('default')">Por defecto</button>
+    <button class="sort-btn" id="sort-asc" onclick="setSort('asc')">Menor precio</button>
+    <button class="sort-btn" id="sort-desc" onclick="setSort('desc')">Mayor precio</button>
+  </div>
+  <div class="filter-bar" id="filter-bar"></div>
+  <div class="grid" id="grid"></div>
 </div>
 
-<footer>rems. · Impresión 3D Argentina</footer>
+<footer>
+  <div class="container">
+    Catálogo · Impresión 3D Argentina · Todos los precios en ARS
+  </div>
+</footer>
 
+<script>
+const RAW_URL = "https://raw.githubusercontent.com/akasujo/catalogo-3d/main/data.json";
+
+const DEFAULT_PRODUCTS = [
+  { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", precio:1250,  foto:"" },
+  { id:2, nombre:"Caja Anotadora Truco",           tag:"Juegos de mesa",      precio:9500,  foto:"" },
+  { id:3, nombre:"Copa del Mundo 15cm",            tag:"Temporada · Mundial", precio:6000,  foto:"" },
+  { id:4, nombre:"Copa del Mundo 20cm",            tag:"Temporada · Mundial", precio:15000, foto:"" },
+  { id:5, nombre:"Copa del Mundo 25cm",            tag:"Temporada · Mundial", precio:25000, foto:"" },
+  { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", precio:7500,  foto:"" },
+];
+
+let productos = [];
+let filtroActivo = "Todos";
+
+async function loadData() {
+  try {
+    const res = await fetch(RAW_URL + "?t=" + Date.now());
+    if (!res.ok) throw new Error("no data");
+    const data = await res.json();
+    productos = data.productos || DEFAULT_PRODUCTS;
+    const cfg = data.config || {};
+    renderContact(cfg);
+  } catch(e) {
+    productos = DEFAULT_PRODUCTS;
+  }
+  renderFilters();
+  renderCards();
+  updateStats();
+}
+
+function fmt(n) { return "$"+Math.round(n).toLocaleString("es-AR"); }
+
+function getTags() {
+  return ["Todos", ...[...new Set(productos.map(p=>p.tag))]];
+}
+
+function renderFilters() {
+  const bar = document.getElementById("filter-bar");
+  bar.innerHTML = "";
+  getTags().forEach(tag => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (tag === filtroActivo ? " active" : "");
+    btn.textContent = tag;
+    btn.onclick = () => { filtroActivo = tag; renderFilters(); renderCards(); };
+    bar.appendChild(btn);
+  });
+}
+
+function renderCards() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const query = (document.getElementById("search-input")?.value || "").toLowerCase().trim();
+  const base = filtroActivo === "Todos" ? productos : productos.filter(p=>p.tag===filtroActivo);
+  const searched = query ? base.filter(p => p.nombre.toLowerCase().includes(query) || (p.descripcion||"").toLowerCase().includes(query)) : base;
+  const filtered = getSorted(searched);
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="no-results">No hay productos en esta categoría</div>`;
+    return;
+  }
+
+  filtered.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = (i * 0.05) + "s";
+
+    // Badge NUEVO (7 días)
+    const isNew = p.fechaAlta && (Date.now() - new Date(p.fechaAlta).getTime()) < 7 * 24 * 60 * 60 * 1000;
+    const newBadge = isNew ? `<div class="badge-new">Nuevo</div>` : "";
+
+    // Stock
+    const s = p.stockUnidades;
+    let stockLabel, stockClass;
+    if (s === undefined || s === null) { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
+    else if (s === 0) { stockLabel = "Sin stock"; stockClass = "stock-sin-stock"; }
+    else if (s === 1) { stockLabel = "Última unidad"; stockClass = "stock-sin-stock"; }
+    else { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
+    const stockHTML = `<div class="stock-badge ${stockClass}">${stockLabel}</div>`;
+
+    const imgHTML = p.foto
+      ? `<img src="${p.foto}" alt="${p.nombre}" onclick="window.location.href='producto.html?id=${p.id}'" style="cursor:pointer;">`
+      : `<div class="card-img-placeholder">🖨️</div>`;
+    const descHTML = p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : "";
+    const wspMsg = encodeURIComponent("Hola! Me interesa el producto: " + p.nombre);
+    const wspURL = "https://wa.me/5491170650288?text=" + wspMsg;
+    const shareURL = encodeURIComponent(window.location.href.split("?")[0] + "?p=" + p.id);
+
+    card.innerHTML = `
+      ${newBadge}
+      <div class="card-img-wrap">${imgHTML}</div>
+      ${stockHTML}
+      <div class="card-tag">${p.tag}</div>
+      <a href="producto.html?id=${p.id}" class="card-name" style="text-decoration:none;color:inherit;display:block;">${p.nombre}</a>
+      ${descHTML}
+      <div class="card-price-row">
+        <span class="price-label">Precio</span>
+        <span>
+          ${p.descuento && p.descuentoFecha && new Date(p.descuentoFecha) >= new Date()
+            ? `<span class="price-original">${fmt(p.precio)}</span>
+               <span class="price-discount-badge">-${fmt(p.descuento)}</span>
+               <div class="price-val">${fmt(p.precio - p.descuento)}</div>`
+            : `<span class="price-val">${fmt(p.precio)}</span>`}
+        </span>
+      </div>
+      <a href="${wspURL}" target="_blank" class="btn-wsp">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Consultar por WhatsApp
+      </a>
+      <button class="btn-share" onclick="shareProduct(${p.id}, '${p.nombre.replace(/'/g,"\'")}')">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+        Compartir
+      </button>`;
+    grid.appendChild(card);
+  });
+}
+
+function updateStats() {
+  const tags = [...new Set(productos.map(p=>p.tag))];
+  const minPrecio = productos.length ? Math.min(...productos.map(p=>p.precio)) : 0;
+  document.getElementById("stat-productos").textContent = productos.length;
+  document.getElementById("stat-categorias").textContent = tags.length;
+  document.getElementById("stat-desde").textContent = fmt(minPrecio);
+}
+
+function renderContact(cfg) {
+  const el = document.getElementById("contact-info");
+  if (cfg && (cfg.contacto || cfg.whatsapp)) {
+    el.innerHTML = `
+      ${cfg.contacto ? `<p><strong>Contacto:</strong> ${cfg.contacto}</p>` : ""}
+      ${cfg.whatsapp ? `<p><strong>WhatsApp:</strong> ${cfg.whatsapp}</p>` : ""}
+    `;
+  }
+}
+
+let sortMode = "default";
+
+function setSort(mode) {
+  sortMode = mode;
+  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("sort-" + mode).classList.add("active");
+  renderCards();
+}
+
+function getSorted(list) {
+  if (sortMode === "asc") return [...list].sort((a,b) => a.precio - b.precio);
+  if (sortMode === "desc") return [...list].sort((a,b) => b.precio - a.precio);
+  return list;
+}
+
+function shareProduct(id, nombre) {
+  const base = window.location.href.split("/").slice(0,-1).join("/");
+  const url = base + "/producto.html?id=" + id;
+  navigator.clipboard.writeText(url).then(() => {
+    const t = document.getElementById("share-toast");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2000);
+  });
+}
+
+function openLightbox(src, alt) {
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  img.src = src; img.alt = alt;
+  lb.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+
+loadData();
+</script>
+
+<div class="share-toast" id="share-toast">Link copiado ✓</div>
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
 </body>
 </html>
