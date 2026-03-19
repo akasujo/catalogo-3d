@@ -132,6 +132,16 @@
       "precio": 22500,
       "productoId": 12,
       "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "Presencial",
+      "cantidad": 2,
+      "fecha": "2026-03-19",
+      "id": 1773954335132,
+      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
+      "precio": 44000,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
     }
   ]
 }
