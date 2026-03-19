@@ -203,6 +203,7 @@
         <div class="field">
           <label>¿Para cuándo lo necesitás?</label>
           <input type="date" id="b-fecha">
+        <span class="error-msg" id="err-b-fecha">La fecha no puede ser anterior a hoy</span>
         </div>
       </div>
       <div class="field">
@@ -271,26 +272,25 @@ function enviarConArchivo() {
     ["a-cantidad","err-a-cantidad",cantidad],
   ])) return;
 
-  let msg = `*PEDIDO - rems.*\n\n`;
-  msg += `*Nombre:* ${nombre}\n\n`;
-  msg += `*Archivo para imprimir:*\n${link}\n\n`;
-  msg += `🔢 *Cantidad:* ${cantidad}\n`;
-  if (color) msg += `🎨 *Color:* ${color}\n`;
-  if (notas) msg += `\n📝 *Notas:*\n${notas}\n`;
-  if (direccion) msg += `\n📍 *Dirección de envío:*\n${direccion}\n`;
+  let msg = "[ PEDIDO - rems. ]\n\n";
+  msg += "Nombre: " + nombre + "\n\n";
+  msg += "Archivo para imprimir:\n" + link + "\n\n";
+  msg += "Cantidad: " + cantidad + "\n";
+  if (color) msg += "Color: " + color + "\n";
+  if (notas) msg += "\nNotas:\n" + notas + "\n";
+  if (direccion) msg += "\nDireccion de envio:\n" + direccion + "\n";
 
   window.open("https://wa.me/5491170650288?text=" + encodeURIComponent(msg), "_blank");
 }
 
 function enviarConIdea() {
-  const nombre     = document.getElementById("b-nombre").value.trim();
-  const telefono   = document.getElementById("b-telefono").value.trim();
-  const producto   = document.getElementById("b-producto").value.trim();
-  const descripcion= document.getElementById("b-descripcion").value.trim();
-  const cantidad   = document.getElementById("b-cantidad").value.trim();
-  const fecha      = document.getElementById("b-fecha").value;
-  const color      = document.getElementById("b-color").value.trim();
-  const direccion  = document.getElementById("b-direccion").value.trim();
+  const nombre      = document.getElementById("b-nombre").value.trim();
+  const producto    = document.getElementById("b-producto").value.trim();
+  const descripcion = document.getElementById("b-descripcion").value.trim();
+  const cantidad    = document.getElementById("b-cantidad").value.trim();
+  const fecha       = document.getElementById("b-fecha").value;
+  const color       = document.getElementById("b-color").value.trim();
+  const direccion   = document.getElementById("b-direccion").value.trim();
 
   if (!validate([
     ["b-nombre","err-b-nombre",nombre],
@@ -299,14 +299,25 @@ function enviarConIdea() {
     ["b-cantidad","err-b-cantidad",cantidad],
   ])) return;
 
-  let msg = `*PEDIDO PERSONALIZADO - rems.*\n\n`;
-  msg += `*Nombre:* ${nombre}\n`;
-  msg += `*Idea:* ${producto}\n`;
-  msg += `*Cantidad:* ${cantidad}\n`;
-  if (fecha) msg += `*Lo necesito para:* ${fecha}\n`;
-  if (color) msg += `*Color:* ${color}\n`;
-  msg += `\n*Descripcion:*\n${descripcion}\n`;
-  if (direccion) msg += `\n*Direccion de envio:*\n${direccion}\n`;
+  // Validar fecha no anterior a hoy
+  if (fecha) {
+    const today = new Date().toISOString().split("T")[0];
+    if (fecha < today) {
+      const fechaEl = document.getElementById("b-fecha");
+      fechaEl.classList.add("error");
+      document.getElementById("err-b-fecha").classList.add("show");
+      return;
+    }
+  }
+
+  let msg = "[ PEDIDO PERSONALIZADO - rems. ]\n\n";
+  msg += "Nombre: " + nombre + "\n";
+  msg += "Idea: " + producto + "\n";
+  msg += "Cantidad: " + cantidad + "\n";
+  if (fecha) msg += "Lo necesito para: " + fecha + "\n";
+  if (color) msg += "Color: " + color + "\n";
+  msg += "\nDescripcion:\n" + descripcion + "\n";
+  if (direccion) msg += "\nDireccion de envio:\n" + direccion + "\n";
 
   window.open("https://wa.me/5491170650288?text=" + encodeURIComponent(msg), "_blank");
 }
@@ -319,6 +330,12 @@ if (fechaEl) fechaEl.min = today;
 // Limpiar errores al escribir
 document.querySelectorAll("input, textarea").forEach(el => {
   el.addEventListener("input", () => {
+    el.classList.remove("error");
+    const errId = "err-" + el.id;
+    const err = document.getElementById(errId);
+    if (err) err.classList.remove("show");
+  });
+  el.addEventListener("change", () => {
     el.classList.remove("error");
     const errId = "err-" + el.id;
     const err = document.getElementById(errId);
