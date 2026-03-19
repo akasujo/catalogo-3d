@@ -124,11 +124,7 @@
           <input type="text" id="a-nombre" placeholder="Tu nombre">
           <span class="error-msg" id="err-a-nombre">Campo requerido</span>
         </div>
-        <div class="field">
-          <label>Teléfono *</label>
-          <input type="tel" id="a-telefono" placeholder="Ej: 11 1234-5678">
-          <span class="error-msg" id="err-a-telefono">Campo requerido</span>
-        </div>
+  
       </div>
     </div>
 
@@ -182,11 +178,7 @@
           <input type="text" id="b-nombre" placeholder="Tu nombre">
           <span class="error-msg" id="err-b-nombre">Campo requerido</span>
         </div>
-        <div class="field">
-          <label>Teléfono *</label>
-          <input type="tel" id="b-telefono" placeholder="Ej: 11 1234-5678">
-          <span class="error-msg" id="err-b-telefono">Campo requerido</span>
-        </div>
+  
       </div>
     </div>
 
@@ -267,7 +259,6 @@ function validate(fields) {
 
 function enviarConArchivo() {
   const nombre   = document.getElementById("a-nombre").value.trim();
-  const telefono = document.getElementById("a-telefono").value.trim();
   const link     = document.getElementById("a-link").value.trim();
   const cantidad = document.getElementById("a-cantidad").value.trim();
   const color    = document.getElementById("a-color").value.trim();
@@ -276,15 +267,13 @@ function enviarConArchivo() {
 
   if (!validate([
     ["a-nombre","err-a-nombre",nombre],
-    ["a-telefono","err-a-telefono",telefono],
     ["a-link","err-a-link",link],
     ["a-cantidad","err-a-cantidad",cantidad],
   ])) return;
 
-  let msg = `🖨️ *PEDIDO — rems.*\n\n`;
-  msg += `👤 *Nombre:* ${nombre}\n`;
-  msg += `📞 *Teléfono:* ${telefono}\n\n`;
-  msg += `📎 *Archivo para imprimir:*\n${link}\n\n`;
+  let msg = `*PEDIDO - rems.*\n\n`;
+  msg += `*Nombre:* ${nombre}\n\n`;
+  msg += `*Archivo para imprimir:*\n${link}\n\n`;
   msg += `🔢 *Cantidad:* ${cantidad}\n`;
   if (color) msg += `🎨 *Color:* ${color}\n`;
   if (notas) msg += `\n📝 *Notas:*\n${notas}\n`;
@@ -305,24 +294,27 @@ function enviarConIdea() {
 
   if (!validate([
     ["b-nombre","err-b-nombre",nombre],
-    ["b-telefono","err-b-telefono",telefono],
     ["b-producto","err-b-producto",producto],
     ["b-descripcion","err-b-descripcion",descripcion],
     ["b-cantidad","err-b-cantidad",cantidad],
   ])) return;
 
-  let msg = `🖨️ *PEDIDO PERSONALIZADO — rems.*\n\n`;
-  msg += `👤 *Nombre:* ${nombre}\n`;
-  msg += `📞 *Teléfono:* ${telefono}\n\n`;
-  msg += `💡 *Idea:* ${producto}\n`;
-  msg += `🔢 *Cantidad:* ${cantidad}\n`;
-  if (fecha) msg += `📅 *Lo necesito para:* ${fecha}\n`;
-  if (color) msg += `🎨 *Color:* ${color}\n`;
-  msg += `\n📝 *Descripción:*\n${descripcion}\n`;
-  if (direccion) msg += `\n📍 *Dirección de envío:*\n${direccion}\n`;
+  let msg = `*PEDIDO PERSONALIZADO - rems.*\n\n`;
+  msg += `*Nombre:* ${nombre}\n`;
+  msg += `*Idea:* ${producto}\n`;
+  msg += `*Cantidad:* ${cantidad}\n`;
+  if (fecha) msg += `*Lo necesito para:* ${fecha}\n`;
+  if (color) msg += `*Color:* ${color}\n`;
+  msg += `\n*Descripcion:*\n${descripcion}\n`;
+  if (direccion) msg += `\n*Direccion de envio:*\n${direccion}\n`;
 
   window.open("https://wa.me/5491170650288?text=" + encodeURIComponent(msg), "_blank");
 }
+
+// Set min date to today
+const today = new Date().toISOString().split("T")[0];
+const fechaEl = document.getElementById("b-fecha");
+if (fechaEl) fechaEl.min = today;
 
 // Limpiar errores al escribir
 document.querySelectorAll("input, textarea").forEach(el => {
