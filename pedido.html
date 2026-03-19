@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedido personalizado — rems.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E8E6E1;
+    --bg2: #DEDAD4;
+    --border: #C8C4BC;
+    --text: #111111;
+    --muted: #888880;
+    --white: #F2F0EB;
+    --green: #2A6B3A;
+    --green-wsp: #25D366;
+    --red: #8B2020;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
+  .container { max-width:640px; margin:0 auto; padding:0 32px 64px; }
+
+  header { padding:32px 0 24px; border-bottom:2px solid var(--text); margin-bottom:48px; }
+  .header-inner { display:flex; align-items:center; justify-content:space-between; }
+  .brand { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:36px; text-transform:uppercase; text-decoration:none; color:var(--text); }
+  .btn-back { color:var(--muted); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; transition:color 0.15s; }
+  .btn-back:hover { color:var(--text); }
+
+  .form-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(40px,8vw,64px); text-transform:uppercase; line-height:0.9; margin-bottom:8px; }
+  .form-sub { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:40px; }
+
+  /* Selector de camino */
+  .path-question { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:22px; text-transform:uppercase; margin-bottom:16px; }
+  .path-buttons { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:40px; }
+  .path-btn {
+    padding:24px 16px; border:2px solid var(--border); background:var(--white);
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px;
+    text-transform:uppercase; letter-spacing:0.04em; cursor:pointer;
+    transition:all 0.15s; color:var(--text); text-align:center; display:flex;
+    flex-direction:column; align-items:center; gap:8px;
+  }
+  .path-btn:hover { border-color:var(--text); background:var(--bg2); }
+  .path-btn.active { background:var(--text); color:var(--white); border-color:var(--text); }
+  .path-btn-icon { font-size:28px; line-height:1; }
+  .path-btn-sub { font-size:10px; font-family:'Barlow',sans-serif; font-weight:400; opacity:0.7; text-transform:uppercase; letter-spacing:0.1em; }
+
+  /* Formulario */
+  .form-panel { display:none; }
+  .form-panel.active { display:block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  .form-section { margin-bottom:28px; }
+  .section-label { font-size:9px; text-transform:uppercase; letter-spacing:0.18em; color:var(--muted); border-top:1px solid var(--border); padding-top:10px; margin-bottom:20px; }
+
+  .field { display:flex; flex-direction:column; gap:6px; margin-bottom:20px; }
+  .field label { font-size:9px; text-transform:uppercase; letter-spacing:0.15em; color:var(--muted); }
+  .field input, .field textarea {
+    background:transparent; border:none; border-bottom:2px solid var(--border);
+    padding:10px 4px; color:var(--text); font-family:'Barlow',sans-serif;
+    font-size:15px; font-weight:400; outline:none; width:100%;
+    transition:border-color 0.15s; resize:none;
+  }
+  .field input:focus, .field textarea:focus { border-bottom-color:var(--text); }
+  .field input.error, .field textarea.error { border-bottom-color:var(--red); }
+  .field .hint { font-size:10px; color:var(--muted); line-height:1.5; }
+  .error-msg { font-size:11px; color:var(--red); margin-top:2px; display:none; }
+  .error-msg.show { display:block; }
+
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .btn-send {
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--green-wsp); color:#fff; border:none; width:100%;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:18px;
+    letter-spacing:0.08em; text-transform:uppercase; padding:18px;
+    cursor:pointer; transition:background 0.15s; margin-top:8px;
+  }
+  .btn-send:hover { background:#1da851; }
+  .btn-send svg { width:20px; height:20px; fill:#fff; flex-shrink:0; }
+
+  footer { border-top:1px solid var(--border); padding:24px 0; color:var(--muted); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; margin-top:40px; }
+
+  @media(max-width:480px) {
+    .field-row { grid-template-columns:1fr; }
+    .path-buttons { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <a href="landing.html" class="brand">rems.</a>
+      <a href="landing.html" class="btn-back">← Volver</a>
+    </div>
+  </header>
+
+  <div class="form-title">Pedido<br>personalizado</div>
+  <div class="form-sub">Completá el formulario y te contactamos por WhatsApp para confirmar tu pedido.</div>
+
+  <!-- Selector de camino -->
+  <div class="path-question">¿Tenés el archivo para imprimir?</div>
+  <div class="path-buttons">
+    <button class="path-btn" id="btn-si" onclick="selectPath('si')">
+      <div class="path-btn-icon">✅</div>
+      Sí, tengo el archivo
+      <div class="path-btn-sub">Tengo un link o archivo STL</div>
+    </button>
+    <button class="path-btn" id="btn-no" onclick="selectPath('no')">
+      <div class="path-btn-icon">💡</div>
+      No, tengo una idea
+      <div class="path-btn-sub">Necesito que me ayuden</div>
+    </button>
+  </div>
+
+  <!-- CAMINO A: Tiene archivo -->
+  <div class="form-panel" id="panel-si">
+    <div class="form-section">
+      <div class="section-label">Tus datos</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nombre *</label>
+          <input type="text" id="a-nombre" placeholder="Tu nombre">
+          <span class="error-msg" id="err-a-nombre">Campo requerido</span>
+        </div>
+        <div class="field">
+          <label>Teléfono *</label>
+          <input type="tel" id="a-telefono" placeholder="Ej: 11 1234-5678">
+          <span class="error-msg" id="err-a-telefono">Campo requerido</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Tu archivo</div>
+      <div class="field">
+        <label>Link del archivo *</label>
+        <input type="url" id="a-link" placeholder="Ej: https://www.printables.com/model/...">
+        <div class="hint">Pegá el link de Printables, Thingiverse, Google Drive, Dropbox u otra plataforma.</div>
+        <span class="error-msg" id="err-a-link">Campo requerido</span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Cantidad *</label>
+          <input type="number" id="a-cantidad" placeholder="Ej: 5" min="1">
+          <span class="error-msg" id="err-a-cantidad">Campo requerido</span>
+        </div>
+        <div class="field">
+          <label>Color del filamento</label>
+          <input type="text" id="a-color" placeholder="Ej: Negro, blanco...">
+        </div>
+      </div>
+      <div class="field">
+        <label>Notas adicionales</label>
+        <textarea id="a-notas" rows="3" placeholder="Escala, material preferido, urgencia, detalles del acabado..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Envío</div>
+      <div class="field">
+        <label>Dirección de envío</label>
+        <input type="text" id="a-direccion" placeholder="Calle, número, localidad, provincia">
+        <div class="hint">Dejalo vacío si retirás en persona o coordinás el envío por WhatsApp.</div>
+      </div>
+    </div>
+
+    <button class="btn-send" onclick="enviarConArchivo()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+  </div>
+
+  <!-- CAMINO B: Tiene una idea -->
+  <div class="form-panel" id="panel-no">
+    <div class="form-section">
+      <div class="section-label">Tus datos</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Nombre *</label>
+          <input type="text" id="b-nombre" placeholder="Tu nombre">
+          <span class="error-msg" id="err-b-nombre">Campo requerido</span>
+        </div>
+        <div class="field">
+          <label>Teléfono *</label>
+          <input type="tel" id="b-telefono" placeholder="Ej: 11 1234-5678">
+          <span class="error-msg" id="err-b-telefono">Campo requerido</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Tu idea</div>
+      <div class="field">
+        <label>¿Qué querés imprimir? *</label>
+        <input type="text" id="b-producto" placeholder="Ej: Llavero con mi logo, soporte para celular, figura decorativa...">
+        <span class="error-msg" id="err-b-producto">Campo requerido</span>
+      </div>
+      <div class="field">
+        <label>Descripción detallada *</label>
+        <textarea id="b-descripcion" rows="4" placeholder="Contanos todo: forma, tamaño aproximado, uso que le vas a dar, si tenés alguna referencia visual..."></textarea>
+        <span class="error-msg" id="err-b-descripcion">Campo requerido</span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Cantidad *</label>
+          <input type="number" id="b-cantidad" placeholder="Ej: 10" min="1">
+          <span class="error-msg" id="err-b-cantidad">Campo requerido</span>
+        </div>
+        <div class="field">
+          <label>¿Para cuándo lo necesitás?</label>
+          <input type="date" id="b-fecha">
+        </div>
+      </div>
+      <div class="field">
+        <label>Color del filamento</label>
+        <input type="text" id="b-color" placeholder="Ej: Dorado, negro, blanco, varios colores...">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Envío</div>
+      <div class="field">
+        <label>Dirección de envío</label>
+        <input type="text" id="b-direccion" placeholder="Calle, número, localidad, provincia">
+        <div class="hint">Dejalo vacío si retirás en persona o coordinás el envío por WhatsApp.</div>
+      </div>
+    </div>
+
+    <button class="btn-send" onclick="enviarConIdea()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+  </div>
+</div>
+
+<footer>rems. · Impresión 3D Argentina</footer>
+
+<script>
+function selectPath(path) {
+  document.getElementById("btn-si").classList.toggle("active", path === "si");
+  document.getElementById("btn-no").classList.toggle("active", path === "no");
+  document.getElementById("panel-si").classList.toggle("active", path === "si");
+  document.getElementById("panel-no").classList.toggle("active", path === "no");
+  setTimeout(() => {
+    document.getElementById("panel-" + path).scrollIntoView({ behavior:"smooth", block:"start" });
+  }, 50);
+}
+
+function validate(fields) {
+  let valid = true;
+  fields.forEach(([id, errId, val]) => {
+    const el = document.getElementById(id);
+    const err = document.getElementById(errId);
+    if (!val) {
+      el.classList.add("error");
+      err.classList.add("show");
+      valid = false;
+    } else {
+      el.classList.remove("error");
+      err.classList.remove("show");
+    }
+  });
+  return valid;
+}
+
+function enviarConArchivo() {
+  const nombre   = document.getElementById("a-nombre").value.trim();
+  const telefono = document.getElementById("a-telefono").value.trim();
+  const link     = document.getElementById("a-link").value.trim();
+  const cantidad = document.getElementById("a-cantidad").value.trim();
+  const color    = document.getElementById("a-color").value.trim();
+  const notas    = document.getElementById("a-notas").value.trim();
+  const direccion= document.getElementById("a-direccion").value.trim();
+
+  if (!validate([
+    ["a-nombre","err-a-nombre",nombre],
+    ["a-telefono","err-a-telefono",telefono],
+    ["a-link","err-a-link",link],
+    ["a-cantidad","err-a-cantidad",cantidad],
+  ])) return;
+
+  let msg = `🖨️ *PEDIDO — rems.*\n\n`;
+  msg += `👤 *Nombre:* ${nombre}\n`;
+  msg += `📞 *Teléfono:* ${telefono}\n\n`;
+  msg += `📎 *Archivo para imprimir:*\n${link}\n\n`;
+  msg += `🔢 *Cantidad:* ${cantidad}\n`;
+  if (color) msg += `🎨 *Color:* ${color}\n`;
+  if (notas) msg += `\n📝 *Notas:*\n${notas}\n`;
+  if (direccion) msg += `\n📍 *Dirección de envío:*\n${direccion}\n`;
+
+  window.open("https://wa.me/5491170650288?text=" + encodeURIComponent(msg), "_blank");
+}
+
+function enviarConIdea() {
+  const nombre     = document.getElementById("b-nombre").value.trim();
+  const telefono   = document.getElementById("b-telefono").value.trim();
+  const producto   = document.getElementById("b-producto").value.trim();
+  const descripcion= document.getElementById("b-descripcion").value.trim();
+  const cantidad   = document.getElementById("b-cantidad").value.trim();
+  const fecha      = document.getElementById("b-fecha").value;
+  const color      = document.getElementById("b-color").value.trim();
+  const direccion  = document.getElementById("b-direccion").value.trim();
+
+  if (!validate([
+    ["b-nombre","err-b-nombre",nombre],
+    ["b-telefono","err-b-telefono",telefono],
+    ["b-producto","err-b-producto",producto],
+    ["b-descripcion","err-b-descripcion",descripcion],
+    ["b-cantidad","err-b-cantidad",cantidad],
+  ])) return;
+
+  let msg = `🖨️ *PEDIDO PERSONALIZADO — rems.*\n\n`;
+  msg += `👤 *Nombre:* ${nombre}\n`;
+  msg += `📞 *Teléfono:* ${telefono}\n\n`;
+  msg += `💡 *Idea:* ${producto}\n`;
+  msg += `🔢 *Cantidad:* ${cantidad}\n`;
+  if (fecha) msg += `📅 *Lo necesito para:* ${fecha}\n`;
+  if (color) msg += `🎨 *Color:* ${color}\n`;
+  msg += `\n📝 *Descripción:*\n${descripcion}\n`;
+  if (direccion) msg += `\n📍 *Dirección de envío:*\n${direccion}\n`;
+
+  window.open("https://wa.me/5491170650288?text=" + encodeURIComponent(msg), "_blank");
+}
+
+// Limpiar errores al escribir
+document.querySelectorAll("input, textarea").forEach(el => {
+  el.addEventListener("input", () => {
+    el.classList.remove("error");
+    const errId = "err-" + el.id;
+    const err = document.getElementById(errId);
+    if (err) err.classList.remove("show");
+  });
+});
+</script>
+</body>
+</html>
