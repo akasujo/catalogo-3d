@@ -3,396 +3,572 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo — Impresión 3D</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<title>rems. · Impresión 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #E8E6E1;
-    --bg2: #DEDAD4;
-    --border: #C8C4BC;
-    --text: #111111;
-    --muted: #888880;
-    --green: #2A6B3A;
-    --red: #8B2020;
-    --white: #F2F0EB;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
-  .container { max-width:1080px; margin:0 auto; padding:0 32px; }
+:root {
+  --bg: #F7F5F2;
+  --bg2: #EFEDE9;
+  --border: #E0DDD8;
+  --text: #1A1A18;
+  --muted: #8A8880;
+  --accent: #C8A96E;
+  --green: #2D6A4F;
+  --green-wsp: #25D366;
+  --red: #C0392B;
+  --white: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --nav-h: 64px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
 
-  header { padding:56px 0 40px; border-bottom:2px solid var(--text); }
-  .header-inner { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; }
-  .brand-eyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-  .brand-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(64px,10vw,120px); line-height:0.85; text-transform:uppercase; }
-  .brand-title .accent { display:block; font-weight:300; font-size:0.38em; letter-spacing:0.05em; color:var(--muted); font-family:'Barlow',sans-serif; text-transform:uppercase; margin-top:6px; }
+/* ── ANNOUNCEMENT BAR ── */
+.announce-bar {
+  background:var(--text); color:var(--white);
+  font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+  text-align:center; padding:9px 16px;
+}
+.announce-bar a { color:var(--accent); text-decoration:none; }
 
-  .header-right { display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
-  .contact-info { text-align:right; }
-  .contact-info p { font-size:12px; color:var(--muted); line-height:1.8; }
-  .contact-info strong { color:var(--text); font-weight:500; }
-  .btn-instagram {
-    display:inline-flex; align-items:center; gap:8px;
-    background:var(--text); color:var(--white);
-    font-family:'Barlow Condensed',sans-serif; font-weight:700;
-    font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
-    padding:10px 20px; text-decoration:none; border:2px solid var(--text);
-    transition:all 0.15s; margin-top:12px;
-  }
-  .btn-instagram:hover { background:transparent; color:var(--text); }
-  .btn-instagram svg { width:16px; height:16px; fill:currentColor; }
+/* ── NAV ── */
+nav {
+  position:sticky; top:0; z-index:100;
+  background:rgba(247,245,242,0.95); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  height:var(--nav-h); display:flex; align-items:center;
+}
+.nav-inner {
+  max-width:1200px; margin:0 auto; padding:0 32px;
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+.nav-logo {
+  font-family:'DM Serif Display',serif; font-size:24px; letter-spacing:-0.02em;
+  text-decoration:none; color:var(--text); flex-shrink:0;
+}
+.nav-links { display:flex; gap:32px; align-items:center; }
+.nav-links a {
+  font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+  text-decoration:none; color:var(--muted); transition:color 0.2s; font-weight:500;
+}
+.nav-links a:hover { color:var(--text); }
+.nav-right { display:flex; gap:16px; align-items:center; }
+.nav-icon-btn {
+  background:none; border:none; cursor:pointer; color:var(--muted);
+  font-size:11px; letter-spacing:0.1em; text-transform:uppercase; font-weight:500;
+  display:flex; align-items:center; gap:6px; transition:color 0.2s; text-decoration:none;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-icon-btn:hover { color:var(--text); }
+.nav-icon-btn svg { width:16px; height:16px; fill:currentColor; }
 
-  .stats-bar { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--border); border-top:2px solid var(--text); margin:40px 0; background:var(--white); }
-  .stat { padding:20px 24px; border-right:1px solid var(--border); }
-  .stat:last-child { border-right:none; }
-  .stat-value { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:32px; line-height:1; }
-  .stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; margin-top:5px; }
+/* ── HERO ── */
+.hero {
+  max-width:1200px; margin:0 auto; padding:72px 32px 56px;
+  display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+}
+.hero-text { }
+.hero-eyebrow {
+  font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:16px; font-weight:500;
+}
+.hero-title {
+  font-family:'DM Serif Display',serif; font-size:clamp(48px,6vw,80px);
+  line-height:1.0; letter-spacing:-0.02em; margin-bottom:20px;
+}
+.hero-title em { font-style:italic; color:var(--accent); }
+.hero-desc { font-size:15px; color:var(--muted); line-height:1.7; margin-bottom:32px; max-width:420px; }
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-hero-primary {
+  background:var(--text); color:var(--white); border:none;
+  font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:0.12em;
+  text-transform:uppercase; font-weight:600; padding:14px 28px;
+  cursor:pointer; text-decoration:none; transition:background 0.2s;
+}
+.btn-hero-primary:hover { background:#333; }
+.btn-hero-secondary {
+  background:transparent; color:var(--text); border:1.5px solid var(--border);
+  font-family:'DM Sans',sans-serif; font-size:12px; letter-spacing:0.12em;
+  text-transform:uppercase; font-weight:600; padding:14px 28px;
+  cursor:pointer; text-decoration:none; transition:all 0.2s;
+}
+.btn-hero-secondary:hover { border-color:var(--text); }
+.hero-stats {
+  display:flex; gap:32px; margin-top:40px; padding-top:32px; border-top:1px solid var(--border);
+}
+.hero-stat-val {
+  font-family:'DM Serif Display',serif; font-size:32px; line-height:1;
+  margin-bottom:4px; letter-spacing:-0.02em;
+}
+.hero-stat-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
 
-  .section-header { display:flex; align-items:baseline; justify-content:space-between; border-top:2px solid var(--text); padding-top:12px; margin-bottom:24px; margin-top:40px; }
-  .section-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:48px; text-transform:uppercase; line-height:1; }
+.hero-visual {
+  background:var(--bg2); aspect-ratio:4/3;
+  display:flex; align-items:center; justify-content:center;
+  font-size:80px; color:var(--border); position:relative; overflow:hidden;
+}
+.hero-visual-inner { text-align:center; }
+.hero-visual-text {
+  font-family:'DM Serif Display',serif; font-size:120px; line-height:0.85;
+  color:rgba(26,26,24,0.06); letter-spacing:-0.04em; user-select:none;
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+}
 
-  .search-bar { margin-bottom:16px; }
-  .search-input { width:100%; background:var(--white); border:none; border-bottom:2px solid var(--text); padding:12px 4px; font-family:'Barlow',sans-serif; font-size:15px; color:var(--text); outline:none; transition:border-color 0.15s; }
-  .search-input::placeholder { color:var(--border); }
-  .search-input:focus { border-bottom-color:var(--green); }
+/* ── SECTION ── */
+.section { max-width:1200px; margin:0 auto; padding:0 32px 80px; }
+.section-head {
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid var(--border);
+}
+.section-title {
+  font-family:'DM Serif Display',serif; font-size:clamp(28px,4vw,40px);
+  letter-spacing:-0.02em; line-height:1;
+}
+.section-count { font-size:12px; color:var(--muted); letter-spacing:0.08em; }
 
-  .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
-  .filter-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:6px 14px; cursor:pointer; transition:all 0.15s; }
-  .filter-btn:hover, .filter-btn.active { background:var(--text); border-color:var(--text); color:var(--white); }
+/* ── FILTERS ── */
+.filters-bar {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.filter-chip {
+  background:transparent; border:1px solid var(--border); color:var(--muted);
+  font-family:'DM Sans',sans-serif; font-size:11px; letter-spacing:0.1em;
+  text-transform:uppercase; padding:7px 16px; cursor:pointer;
+  transition:all 0.2s; font-weight:500; border-radius:0;
+}
+.filter-chip:hover, .filter-chip.active {
+  background:var(--text); border-color:var(--text); color:var(--white);
+}
 
-  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:64px; }
+/* ── TOOLBAR ── */
+.toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin-bottom:28px; flex-wrap:wrap;
+}
+.search-wrap { position:relative; flex:1; max-width:340px; }
+.search-wrap svg {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:14px; height:14px; fill:var(--muted); pointer-events:none;
+}
+.search-input {
+  width:100%; background:var(--white); border:1px solid var(--border);
+  padding:10px 12px 10px 36px; font-family:'DM Sans',sans-serif;
+  font-size:13px; color:var(--text); outline:none;
+  transition:border-color 0.2s;
+}
+.search-input:focus { border-color:var(--text); }
+.search-input::placeholder { color:var(--border); }
 
-  .card { background:var(--white); padding:28px 24px 24px; position:relative; transition:background 0.15s; cursor:default; }
-  .card:hover { background:var(--bg2); }
+.sort-wrap { display:flex; gap:4px; }
+.sort-chip {
+  background:transparent; border:1px solid var(--border); color:var(--muted);
+  font-family:'DM Sans',sans-serif; font-size:11px; letter-spacing:0.08em;
+  text-transform:uppercase; padding:7px 14px; cursor:pointer;
+  transition:all 0.2s; font-weight:500;
+}
+.sort-chip:hover, .sort-chip.active { background:var(--text); border-color:var(--text); color:var(--white); }
 
-  .card-img-wrap { width:100%; aspect-ratio:4/3; background:var(--bg); margin-bottom:16px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-  .card-img-wrap img { width:100%; height:100%; object-fit:cover; }
-  .card-img-placeholder { font-size:32px; opacity:0.3; }
+/* ── GRID ── */
+.products-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+  background:var(--border);
+}
+.no-results {
+  grid-column:1/-1; padding:80px; text-align:center;
+  color:var(--muted); font-size:13px; letter-spacing:0.08em; text-transform:uppercase;
+  background:var(--card-bg);
+}
 
-  .card-tag { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-  .card-name { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; line-height:1.1; margin-bottom:16px; letter-spacing:0.01em; }
+/* ── CARD ── */
+.product-card {
+  background:var(--card-bg); position:relative;
+  display:flex; flex-direction:column;
+  opacity:0; transform:translateY(24px);
+  transition:opacity 0.5s ease, transform 0.5s ease, background 0.2s;
+}
+.product-card.visible { opacity:1; transform:translateY(0); }
+.product-card:hover { background:var(--bg2); }
 
-  .card-price-row { display:flex; align-items:baseline; justify-content:space-between; border-top:1px solid var(--border); padding-top:14px; }
-  .price-label { font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); }
-  .price-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:28px; color:var(--green); line-height:1; }
+.card-img-wrap {
+  width:100%; aspect-ratio:1/1; overflow:hidden;
+  background:var(--bg2); position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.card-img-wrap img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  cursor:pointer;
+}
+.product-card:hover .card-img-wrap img { transform:scale(1.06); }
+.card-img-placeholder { font-size:48px; opacity:0.15; }
 
-  .card-desc { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:14px; }
+.badge-new {
+  position:absolute; top:12px; left:12px; z-index:2;
+  background:var(--accent); color:var(--white);
+  font-size:9px; letter-spacing:0.14em; text-transform:uppercase;
+  font-weight:600; padding:4px 10px;
+}
+.badge-discount {
+  position:absolute; top:12px; right:12px; z-index:2;
+  background:var(--red); color:var(--white);
+  font-size:9px; letter-spacing:0.1em; text-transform:uppercase;
+  font-weight:600; padding:4px 10px;
+}
 
-  /* Etiqueta NUEVO */
-  .badge-new { position:absolute; top:12px; left:12px; background:#E63946; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:3px 8px; z-index:2; }
+.card-body { padding:20px 20px 16px; flex:1; display:flex; flex-direction:column; gap:6px; }
+.card-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); font-weight:500; }
+.card-name {
+  font-family:'DM Serif Display',serif; font-size:18px; line-height:1.2;
+  letter-spacing:-0.01em; text-decoration:none; color:var(--text);
+  transition:color 0.2s; display:block;
+}
+.card-name:hover { color:var(--accent); }
+.card-desc { font-size:12px; color:var(--muted); line-height:1.5; }
 
-  /* Indicador de stock */
-  .stock-badge { display:inline-block; font-size:9px; text-transform:uppercase; letter-spacing:0.12em; font-weight:600; padding:3px 8px; margin-bottom:10px; }
-  .stock-en-stock { background:#EAF3EC; color:#2A6B3A; }
-  .stock-por-encargo { background:#FFF8E1; color:#B07D00; }
-  .stock-sin-stock { background:#FFEBEE; color:#8B2020; }
+.stock-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; letter-spacing:0.1em; text-transform:uppercase; font-weight:500;
+}
+.stock-pill::before { content:""; width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.stock-en-stock { color:var(--green); }
+.stock-en-stock::before { background:var(--green); }
+.stock-sin-stock { color:var(--red); }
+.stock-sin-stock::before { background:var(--red); }
 
-  /* Sort bar */
-  .sort-bar { display:flex; align-items:center; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
-  .sort-label { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); }
-  .sort-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:6px 14px; cursor:pointer; transition:all 0.15s; }
-  .sort-btn:hover, .sort-btn.active { background:var(--text); border-color:var(--text); color:var(--white); }
+.card-footer {
+  padding:14px 20px 20px; border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-top:auto;
+}
+.price-block { display:flex; flex-direction:column; gap:2px; }
+.price-original { font-size:12px; color:var(--muted); text-decoration:line-through; }
+.price-val { font-family:'DM Serif Display',serif; font-size:24px; color:var(--green); letter-spacing:-0.02em; line-height:1; }
 
-  /* Compartir */
-  .btn-share { display:flex; align-items:center; justify-content:center; gap:6px; background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Barlow',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:8px; cursor:pointer; width:100%; margin-top:8px; transition:all 0.15s; }
-  .btn-share:hover { border-color:var(--text); color:var(--text); }
-  .btn-share svg { width:13px; height:13px; fill:currentColor; }
+.card-actions { display:flex; gap:6px; }
+.btn-wsp-card {
+  background:var(--green-wsp); color:var(--white); border:none;
+  font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:0.1em;
+  text-transform:uppercase; font-weight:600; padding:9px 14px;
+  cursor:pointer; text-decoration:none; transition:background 0.2s;
+  white-space:nowrap;
+}
+.btn-wsp-card:hover { background:#1da851; }
+.btn-share-card {
+  background:transparent; border:1px solid var(--border); color:var(--muted);
+  padding:9px 10px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center;
+}
+.btn-share-card:hover { border-color:var(--text); color:var(--text); }
+.btn-share-card svg { width:12px; height:12px; fill:currentColor; }
 
-  /* Toast compartir */
-  .share-toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--text); color:var(--white); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 20px; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:300; }
-  .share-toast.show { opacity:1; }
-  .price-original { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:18px; color:var(--muted); text-decoration:line-through; line-height:1; }
-  .price-discount-badge { background:#E63946; color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; margin-left:6px; vertical-align:middle; }
-  .btn-wsp {
-    display:flex; align-items:center; justify-content:center; gap:7px;
-    background:#25D366; color:#fff; border:none; width:100%;
-    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px;
-    letter-spacing:0.08em; text-transform:uppercase; padding:10px;
-    cursor:pointer; text-decoration:none; margin-top:12px; transition:background 0.15s;
-  }
-  .btn-wsp:hover { background:#1da851; }
-  .btn-wsp svg { width:15px; height:15px; fill:#fff; flex-shrink:0; }
-  .no-results { grid-column:1/-1; padding:48px; text-align:center; color:var(--muted); font-size:13px; letter-spacing:0.05em; text-transform:uppercase; background:var(--white); }
+/* ── TOAST ── */
+.share-toast {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  background:var(--text); color:var(--white); font-size:11px;
+  letter-spacing:0.1em; text-transform:uppercase; padding:12px 24px;
+  opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:500;
+}
+.share-toast.show { opacity:1; }
 
-  footer { border-top:1px solid var(--border); padding:24px 0; color:var(--muted); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; }
+/* ── LIGHTBOX ── */
+.lightbox {
+  position:fixed; inset:0; background:rgba(26,26,24,0.95); z-index:600;
+  display:flex; align-items:center; justify-content:center; padding:32px;
+  opacity:0; pointer-events:none; transition:opacity 0.25s; cursor:zoom-out;
+}
+.lightbox.open { opacity:1; pointer-events:all; }
+.lightbox img {
+  max-width:90vw; max-height:88vh; object-fit:contain;
+  transform:scale(0.94); transition:transform 0.25s; cursor:default;
+}
+.lightbox.open img { transform:scale(1); }
+.lightbox-close {
+  position:fixed; top:20px; right:24px; color:rgba(255,255,255,0.5);
+  font-size:28px; cursor:pointer; background:none; border:none;
+  transition:color 0.2s; line-height:1;
+}
+.lightbox-close:hover { color:#fff; }
 
-  @media(max-width:700px) {
-    .grid { grid-template-columns:1fr; }
-    .stats-bar { grid-template-columns:1fr 1fr; }
-    .header-inner { flex-direction:column; align-items:flex-start; }
-    .header-right { align-items:flex-start; }
-  }
+/* ── FOOTER ── */
+footer {
+  background:var(--text); color:rgba(255,255,255,0.5);
+  padding:40px 32px; margin-top:0;
+}
+.footer-inner {
+  max-width:1200px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+}
+.footer-brand { font-family:'DM Serif Display',serif; font-size:20px; color:var(--white); }
+.footer-links { display:flex; gap:24px; }
+.footer-links a { font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.4); text-decoration:none; transition:color 0.2s; }
+.footer-links a:hover { color:var(--white); }
+.footer-copy { font-size:11px; letter-spacing:0.06em; }
 
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  .card { animation:fadeIn 0.3s ease both; }
-
-  /* ── LIGHTBOX ── */
-  .lightbox-overlay {
-    position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:500;
-    display:flex; align-items:center; justify-content:center;
-    opacity:0; pointer-events:none; transition:opacity 0.2s;
-    cursor:zoom-out;
-  }
-  .lightbox-overlay.open { opacity:1; pointer-events:all; }
-  .lightbox-overlay img {
-    max-width:90vw; max-height:90vh; object-fit:contain;
-    transform:scale(0.92); transition:transform 0.2s;
-    cursor:default;
-  }
-  .lightbox-overlay.open img { transform:scale(1); }
-  .lightbox-close {
-    position:fixed; top:20px; right:24px; color:#fff; font-size:32px;
-    cursor:pointer; line-height:1; opacity:0.7; transition:opacity 0.15s;
-    background:none; border:none;
-  }
-  .lightbox-close:hover { opacity:1; }
-  .card-img-wrap img { cursor:zoom-in; }
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .products-grid { grid-template-columns:repeat(2,1fr); }
+  .hero { grid-template-columns:1fr; }
+  .hero-visual { display:none; }
+  .nav-links { display:none; }
+}
+@media(max-width:560px) {
+  .products-grid { grid-template-columns:1fr; }
+  .hero-stats { gap:20px; }
+  .toolbar { flex-direction:column; align-items:stretch; }
+  .search-wrap { max-width:100%; }
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        
-        <div class="brand-title">
-          CATÁLOGO
-          
-        </div>
-      </div>
-      <div class="header-right">
-        <div class="contact-info" id="contact-info"></div>
-        <a href="https://instagram.com/rems.arg" target="_blank" class="btn-instagram">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          @rems.arg
-        </a>
-        <a href="https://wa.me/5491170650288" target="_blank" class="btn-instagram" style="background:#25D366;border-color:#25D366;color:#fff;margin-top:8px;">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          WhatsApp
-        </a>
-      </div>
-    </div>
-  </header>
 
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-value" id="stat-productos">—</div>
-      <div class="stat-label">Productos</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value" id="stat-categorias">—</div>
-      <div class="stat-label">Categorías</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value" id="stat-desde">—</div>
-      <div class="stat-label">Desde</div>
-    </div>
-  </div>
-
-  <div class="section-header">
-    <span class="section-title">PRODUCTOS</span>
-  </div>
-
-  <div class="search-bar">
-    <input type="text" class="search-input" id="search-input" placeholder="Buscar producto…" oninput="renderCards()">
-  </div>
-  <div class="sort-bar">
-    <span class="sort-label">Ordenar:</span>
-    <button class="sort-btn active" id="sort-default" onclick="setSort('default')">Por defecto</button>
-    <button class="sort-btn" id="sort-asc" onclick="setSort('asc')">Menor precio</button>
-    <button class="sort-btn" id="sort-desc" onclick="setSort('desc')">Mayor precio</button>
-  </div>
-  <div class="filter-bar" id="filter-bar"></div>
-  <div class="grid" id="grid"></div>
+<div class="announce-bar">
+  Impresión 3D hecha en Argentina · <a href="pedido.html">Pedidos personalizados disponibles →</a>
 </div>
 
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">rems.</a>
+    <div class="nav-links">
+      <a href="catalogo.html">Catálogo</a>
+      <a href="pedido.html">Pedido personalizado</a>
+    </div>
+    <div class="nav-right">
+      <a href="https://instagram.com/rems.arg" target="_blank" class="nav-icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <a href="https://wa.me/5491170650288" target="_blank" class="nav-icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Impresión 3D · Argentina</div>
+    <h1 class="hero-title">Objetos que<br><em>importan.</em></h1>
+    <p class="hero-desc">Fabricamos productos únicos con tecnología de impresión 3D. Desde souvenirs hasta decoración y piezas personalizadas.</p>
+    <div class="hero-actions">
+      <a href="#productos" class="btn-hero-primary">Ver productos</a>
+      <a href="pedido.html" class="btn-hero-secondary">Pedido personalizado</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val" id="stat-productos">—</div>
+        <div class="hero-stat-label">Productos</div>
+      </div>
+      <div>
+        <div class="hero-stat-val" id="stat-categorias">—</div>
+        <div class="hero-stat-label">Categorías</div>
+      </div>
+      <div>
+        <div class="hero-stat-val" id="stat-desde">—</div>
+        <div class="hero-stat-label">Desde</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-text">3D</div>
+  </div>
+</section>
+
+<section class="section" id="productos">
+  <div class="section-head">
+    <h2 class="section-title">Productos</h2>
+    <span class="section-count" id="section-count"></span>
+  </div>
+
+  <div class="filters-bar" id="filters-bar"></div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <input type="text" class="search-input" id="search-input" placeholder="Buscar producto…" oninput="renderCards()">
+    </div>
+    <div class="sort-wrap">
+      <button class="sort-chip active" id="sort-default" onclick="setSort('default')">Defecto</button>
+      <button class="sort-chip" id="sort-asc" onclick="setSort('asc')">Menor precio</button>
+      <button class="sort-chip" id="sort-desc" onclick="setSort('desc')">Mayor precio</button>
+    </div>
+  </div>
+
+  <div class="products-grid" id="grid"></div>
+</section>
+
 <footer>
-  <div class="container">
-    Catálogo · Impresión 3D Argentina · Todos los precios en ARS
+  <div class="footer-inner">
+    <div class="footer-brand">rems.</div>
+    <div class="footer-links">
+      <a href="https://instagram.com/rems.arg" target="_blank">Instagram</a>
+      <a href="https://wa.me/5491170650288" target="_blank">WhatsApp</a>
+      <a href="pedido.html">Pedidos</a>
+      <a href="admin.html">Admin</a>
+    </div>
+    <div class="footer-copy">© 2026 rems. · Impresión 3D Argentina</div>
   </div>
 </footer>
 
+<div class="share-toast" id="share-toast">Link copiado ✓</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
 <script>
 const RAW_URL = "https://raw.githubusercontent.com/akasujo/catalogo-3d/main/data.json";
-
 const DEFAULT_PRODUCTS = [
-  { id:1, nombre:"Llavero Copa del Mundo 2026",    tag:"Temporada · Mundial", precio:1250,  foto:"" },
-  { id:2, nombre:"Caja Anotadora Truco",           tag:"Juegos de mesa",      precio:9500,  foto:"" },
-  { id:3, nombre:"Copa del Mundo 15cm",            tag:"Temporada · Mundial", precio:6000,  foto:"" },
-  { id:4, nombre:"Copa del Mundo 20cm",            tag:"Temporada · Mundial", precio:15000, foto:"" },
-  { id:5, nombre:"Copa del Mundo 25cm",            tag:"Temporada · Mundial", precio:25000, foto:"" },
-  { id:6, nombre:"Caja de Figuritas Mundial 2026", tag:"Temporada · Mundial", precio:7500,  foto:"" },
+  { id:1, nombre:"Llavero Copa del Mundo 2026", tag:"Temporada · Mundial", precio:1250, foto:"" },
+  { id:2, nombre:"Caja Anotadora Truco",        tag:"Juegos de mesa",     precio:9500, foto:"" },
 ];
 
 let productos = [];
 let filtroActivo = "Todos";
+let sortMode = "default";
+
+function fmt(n) { return "$" + Math.round(n).toLocaleString("es-AR"); }
 
 async function loadData() {
   try {
     const res = await fetch(RAW_URL + "?t=" + Date.now());
-    if (!res.ok) throw new Error("no data");
+    if (!res.ok) throw new Error();
     const data = await res.json();
     productos = data.productos || DEFAULT_PRODUCTS;
     const cfg = data.config || {};
-    renderContact(cfg);
-  } catch(e) {
-    productos = DEFAULT_PRODUCTS;
-  }
+  } catch(e) { productos = DEFAULT_PRODUCTS; }
   renderFilters();
   renderCards();
   updateStats();
 }
 
-function fmt(n) { return "$"+Math.round(n).toLocaleString("es-AR"); }
-
-function getTags() {
-  return ["Todos", ...[...new Set(productos.map(p=>p.tag))]];
+function updateStats() {
+  const tags = [...new Set(productos.map(p=>p.tag))];
+  const min = productos.length ? Math.min(...productos.map(p=>p.precio)) : 0;
+  document.getElementById("stat-productos").textContent = productos.length;
+  document.getElementById("stat-categorias").textContent = tags.length;
+  document.getElementById("stat-desde").textContent = fmt(min);
 }
 
 function renderFilters() {
-  const bar = document.getElementById("filter-bar");
+  const bar = document.getElementById("filters-bar");
   bar.innerHTML = "";
-  getTags().forEach(tag => {
+  ["Todos", ...[...new Set(productos.map(p=>p.tag))]].forEach(tag => {
     const btn = document.createElement("button");
-    btn.className = "filter-btn" + (tag === filtroActivo ? " active" : "");
+    btn.className = "filter-chip" + (tag === filtroActivo ? " active" : "");
     btn.textContent = tag;
     btn.onclick = () => { filtroActivo = tag; renderFilters(); renderCards(); };
     bar.appendChild(btn);
   });
 }
 
+function setSort(mode) {
+  sortMode = mode;
+  document.querySelectorAll(".sort-chip").forEach(b => b.classList.remove("active"));
+  document.getElementById("sort-" + mode).classList.add("active");
+  renderCards();
+}
+
+function getSorted(list) {
+  if (sortMode === "asc") return [...list].sort((a,b)=>a.precio-b.precio);
+  if (sortMode === "desc") return [...list].sort((a,b)=>b.precio-a.precio);
+  return list;
+}
+
 function renderCards() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
-  const query = (document.getElementById("search-input")?.value || "").toLowerCase().trim();
+  const query = (document.getElementById("search-input")?.value||"").toLowerCase().trim();
   const base = filtroActivo === "Todos" ? productos : productos.filter(p=>p.tag===filtroActivo);
-  const searched = query ? base.filter(p => p.nombre.toLowerCase().includes(query) || (p.descripcion||"").toLowerCase().includes(query)) : base;
+  const searched = query ? base.filter(p=>p.nombre.toLowerCase().includes(query)||(p.descripcion||"").toLowerCase().includes(query)) : base;
   const filtered = getSorted(searched);
 
+  document.getElementById("section-count").textContent = filtered.length + " producto" + (filtered.length !== 1 ? "s" : "");
+
   if (!filtered.length) {
-    grid.innerHTML = `<div class="no-results">No hay productos en esta categoría</div>`;
+    grid.innerHTML = `<div class="no-results">No se encontraron productos</div>`;
     return;
   }
 
   filtered.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.animationDelay = (i * 0.05) + "s";
+    const isNew = p.fechaAlta && (Date.now() - new Date(p.fechaAlta).getTime()) < 7*24*60*60*1000;
+    const hasDiscount = p.descuento && p.descuentoFecha && new Date(p.descuentoFecha) >= new Date();
+    const precioFinal = hasDiscount ? p.precio - p.descuento : p.precio;
 
-    // Badge NUEVO (7 días)
-    const isNew = p.fechaAlta && (Date.now() - new Date(p.fechaAlta).getTime()) < 7 * 24 * 60 * 60 * 1000;
-    const newBadge = isNew ? `<div class="badge-new">Nuevo</div>` : "";
-
-    // Stock
     const s = p.stockUnidades;
     let stockLabel, stockClass;
     if (s === undefined || s === null) { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
     else if (s === 0) { stockLabel = "Sin stock"; stockClass = "stock-sin-stock"; }
     else if (s === 1) { stockLabel = "Última unidad"; stockClass = "stock-sin-stock"; }
     else { stockLabel = "En stock"; stockClass = "stock-en-stock"; }
-    const stockHTML = `<div class="stock-badge ${stockClass}">${stockLabel}</div>`;
 
-    const imgHTML = p.foto
-      ? `<img src="${p.foto}" alt="${p.nombre}" onclick="window.location.href='producto.html?id=${p.id}'" style="cursor:pointer;">`
-      : `<div class="card-img-placeholder">🖨️</div>`;
-    const descHTML = p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : "";
     const wspMsg = encodeURIComponent("Hola! Me interesa el producto: " + p.nombre);
-    const wspURL = "https://wa.me/5491170650288?text=" + wspMsg;
-    const shareURL = encodeURIComponent(window.location.href.split("?")[0] + "?p=" + p.id);
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.style.transitionDelay = (i * 0.06) + "s";
 
     card.innerHTML = `
-      ${newBadge}
-      <div class="card-img-wrap">${imgHTML}</div>
-      ${stockHTML}
-      <div class="card-tag">${p.tag}</div>
-      <a href="producto.html?id=${p.id}" class="card-name" style="text-decoration:none;color:inherit;display:block;">${p.nombre}</a>
-      ${descHTML}
-      <div class="card-price-row">
-        <span class="price-label">Precio</span>
-        <span>
-          ${p.descuento && p.descuentoFecha && new Date(p.descuentoFecha) >= new Date()
-            ? `<span class="price-original">${fmt(p.precio)}</span>
-               <span class="price-discount-badge">-${fmt(p.descuento)}</span>
-               <div class="price-val">${fmt(p.precio - p.descuento)}</div>`
-            : `<span class="price-val">${fmt(p.precio)}</span>`}
-        </span>
+      <div class="card-img-wrap">
+        ${isNew ? `<div class="badge-new">Nuevo</div>` : ""}
+        ${hasDiscount ? `<div class="badge-discount">-${fmt(p.descuento)}</div>` : ""}
+        ${p.foto
+          ? `<img src="${p.foto}" alt="${p.nombre}" onclick="openLightbox('${p.foto}','${p.nombre}')">`
+          : `<div class="card-img-placeholder">🖨️</div>`}
       </div>
-      <a href="${wspURL}" target="_blank" class="btn-wsp">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Consultar por WhatsApp
-      </a>
-      <button class="btn-share" onclick="shareProduct(${p.id}, '${p.nombre.replace(/'/g,"\'")}')">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-        Compartir
-      </button>`;
+      <div class="card-body">
+        <div class="card-tag">${p.tag}</div>
+        <a href="producto.html?id=${p.id}" class="card-name">${p.nombre}</a>
+        ${p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : ""}
+        <div class="stock-pill ${stockClass}">${stockLabel}</div>
+      </div>
+      <div class="card-footer">
+        <div class="price-block">
+          ${hasDiscount ? `<div class="price-original">${fmt(p.precio)}</div>` : ""}
+          <div class="price-val">${fmt(precioFinal)}</div>
+        </div>
+        <div class="card-actions">
+          <a href="https://wa.me/5491170650288?text=${wspMsg}" target="_blank" class="btn-wsp-card">Consultar</a>
+          <button class="btn-share-card" onclick="shareProduct(${p.id})" title="Compartir">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+          </button>
+        </div>
+      </div>`;
+
     grid.appendChild(card);
+    // Scroll reveal
+    setTimeout(() => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      observer.observe(card);
+    }, 0);
   });
 }
 
-function updateStats() {
-  const tags = [...new Set(productos.map(p=>p.tag))];
-  const minPrecio = productos.length ? Math.min(...productos.map(p=>p.precio)) : 0;
-  document.getElementById("stat-productos").textContent = productos.length;
-  document.getElementById("stat-categorias").textContent = tags.length;
-  document.getElementById("stat-desde").textContent = fmt(minPrecio);
-}
-
-function renderContact(cfg) {
-  const el = document.getElementById("contact-info");
-  if (cfg && (cfg.contacto || cfg.whatsapp)) {
-    el.innerHTML = `
-      ${cfg.contacto ? `<p><strong>Contacto:</strong> ${cfg.contacto}</p>` : ""}
-      ${cfg.whatsapp ? `<p><strong>WhatsApp:</strong> ${cfg.whatsapp}</p>` : ""}
-    `;
-  }
-}
-
-let sortMode = "default";
-
-function setSort(mode) {
-  sortMode = mode;
-  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById("sort-" + mode).classList.add("active");
-  renderCards();
-}
-
-function getSorted(list) {
-  if (sortMode === "asc") return [...list].sort((a,b) => a.precio - b.precio);
-  if (sortMode === "desc") return [...list].sort((a,b) => b.precio - a.precio);
-  return list;
-}
-
-function shareProduct(id, nombre) {
+function shareProduct(id) {
   const base = window.location.href.split("/").slice(0,-1).join("/");
-  const url = base + "/producto.html?id=" + id;
-  navigator.clipboard.writeText(url).then(() => {
+  navigator.clipboard.writeText(base + "/producto.html?id=" + id).then(() => {
     const t = document.getElementById("share-toast");
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 2000);
+    setTimeout(()=>t.classList.remove("show"), 2000);
   });
 }
 
 function openLightbox(src, alt) {
   const lb = document.getElementById("lightbox");
-  const img = document.getElementById("lightbox-img");
-  img.src = src; img.alt = alt;
+  document.getElementById("lightbox-img").src = src;
   lb.classList.add("open");
   document.body.style.overflow = "hidden";
 }
-
 function closeLightbox() {
   document.getElementById("lightbox").classList.remove("open");
   document.body.style.overflow = "";
 }
-
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 
 loadData();
 </script>
-
-<div class="share-toast" id="share-toast">Link copiado ✓</div>
-<div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
-</div>
 </body>
 </html>
