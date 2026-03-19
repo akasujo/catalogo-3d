@@ -124,11 +124,11 @@
   ],
   "ventas": [
     {
-      "canal": "Otro",
+      "canal": "Presencial",
       "cantidad": 1,
       "fecha": "2026-03-19",
-      "id": 1773950986267,
-      "notas": "Sobrina de J. L.",
+      "id": 1773951113218,
+      "notas": "Sobrina J.L.",
       "precio": 22500,
       "productoId": 12,
       "productoNombre": "Velador Wavy"
