@@ -150,6 +150,39 @@
   .stock-num { font-size:11px; color:var(--muted); }
   .stock-low { color:var(--red); font-weight:600; }
 
+  /* Métricas */
+  .metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:32px; }
+  .metric-card { background:var(--white); padding:20px 16px; }
+  .metric-val { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:28px; line-height:1; margin-bottom:4px; }
+  .metric-label { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); }
+  .metric-sub { font-size:10px; color:var(--muted); margin-top:4px; }
+  .metric-up { color:var(--green); }
+  .metric-down { color:var(--red); }
+
+  /* Gráfico barras */
+  .chart-wrap { background:var(--white); border:1px solid var(--border); padding:24px; margin-bottom:40px; }
+  .chart-title { font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:16px; }
+  .bar-chart { display:flex; align-items:flex-end; gap:8px; height:120px; }
+  .bar-col { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; }
+  .bar { width:100%; background:var(--text); border-radius:0; transition:background 0.15s; cursor:default; min-height:2px; }
+  .bar:hover { background:var(--green); }
+  .bar-label { font-size:9px; color:var(--muted); text-align:center; white-space:nowrap; }
+  .bar-val { font-size:9px; font-weight:600; color:var(--muted); text-align:center; }
+
+  /* Historial de precios */
+  .price-history { margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .price-history-title { font-size:9px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:8px; }
+  .price-history-item { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); padding:3px 0; border-bottom:1px solid var(--border); }
+  .price-history-item:last-child { border-bottom:none; }
+
+  /* Búsqueda ventas */
+  .ventas-search { margin-bottom:16px; }
+  .ventas-search input { width:100%; background:var(--white); border:none; border-bottom:2px solid var(--text); padding:10px 4px; font-family:'Barlow',sans-serif; font-size:14px; color:var(--text); outline:none; }
+  .ventas-search input::placeholder { color:var(--border); }
+
+  /* Producto row — 5 botones */
+  .product-row { grid-template-columns:56px 1fr 120px 120px 72px; }
+
   @media(max-width:600px) {
     .product-row { grid-template-columns:40px 1fr 100px 32px; }
     .pr-cell.hide-mobile { display:none; }
@@ -195,6 +228,21 @@
         </div>
       </div>
     </header>
+
+    <!-- Métricas -->
+    <div class="section-header">
+      <span class="section-title">MÉTRICAS</span>
+    </div>
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric-card"><div class="metric-val" id="m-ingresos">—</div><div class="metric-label">Ingresos este mes</div><div class="metric-sub" id="m-ingresos-sub"></div></div>
+      <div class="metric-card"><div class="metric-val" id="m-unidades">—</div><div class="metric-label">Unidades vendidas</div><div class="metric-sub" id="m-unidades-sub"></div></div>
+      <div class="metric-card"><div class="metric-val" id="m-top-producto">—</div><div class="metric-label">Producto más vendido</div><div class="metric-sub" id="m-top-sub"></div></div>
+      <div class="metric-card"><div class="metric-val" id="m-top-canal">—</div><div class="metric-label">Canal principal</div><div class="metric-sub" id="m-canal-sub"></div></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Ingresos últimos 6 meses</div>
+      <div class="bar-chart" id="bar-chart"></div>
+    </div>
 
     <!-- Config -->
     <div class="section-header">
@@ -267,6 +315,9 @@
       <span class="section-title">HISTORIAL DE VENTAS</span>
       <button class="btn-export" onclick="exportarExcel()">Exportar Excel</button>
     </div>
+    <div class="ventas-search">
+      <input type="text" id="ventas-search-input" placeholder="Buscar por producto, canal o notas…" oninput="renderVentas()">
+    </div>
     <div class="ventas-mes" id="ventas-mes"></div>
 
   </div>
@@ -326,6 +377,12 @@
         <input type="url" id="m-foto-url" placeholder="https://i.imgur.com/xxxxxxx.jpg" oninput="previewImageUrl()">
         <div class="img-url-hint">Subí la foto en <strong>imgur.com</strong>, clic derecho → "Copiar dirección de imagen" y pegala acá.</div>
         <img id="img-preview" class="img-preview" alt="preview">
+      </div>
+      <div class="full" id="price-history-wrap" style="display:none;">
+        <div class="price-history">
+          <div class="price-history-title">Historial de precios</div>
+          <div id="price-history-list"></div>
+        </div>
       </div>
     </div>
     <div class="modal-actions">
@@ -449,12 +506,89 @@ function renderList() {
         ${p.descuento && p.descuentoFecha && new Date(p.descuentoFecha) >= new Date() ? `<span style="font-size:10px;color:var(--red);display:block;margin-top:2px;">-${fmt(p.descuento)} hasta ${p.descuentoFecha}</span>` : ""}
       </div>
       <div class="pr-cell center hide-mobile" style="font-size:12px;color:${stockColor};font-weight:600">Stock: ${stockNum}</div>
-      <div class="pr-cell center" style="display:flex;gap:4px;justify-content:center">
-        <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})">✏️</button>
-        <button class="btn-icon" onclick="eliminarProducto(${p.id})">✕</button>
+      <div class="pr-cell center" style="display:flex;gap:2px;justify-content:center">
+        <button class="btn-icon btn-edit" onclick="editarProducto(${p.id})" title="Editar">✏️</button>
+        <button class="btn-icon" onclick="duplicarProducto(${p.id})" title="Duplicar" style="color:var(--muted);font-size:12px;">⧉</button>
+        <button class="btn-icon" onclick="eliminarProducto(${p.id})" title="Eliminar">✕</button>
       </div>`;
     list.appendChild(row);
   });
+}
+
+// ── MÉTRICAS ─────────────────────────────────────────────────────────────────
+function renderMetrics() {
+  const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const lastMonth = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth()+1).padStart(2,"0")}`;
+
+  const thisMes = ventas.filter(v => v.fecha.startsWith(thisMonth));
+  const lastMes = ventas.filter(v => v.fecha.startsWith(lastMonth));
+
+  const ingresosThis = thisMes.reduce((s,v)=>s+v.precio,0);
+  const ingresosLast = lastMes.reduce((s,v)=>s+v.precio,0);
+  const unidadesThis = thisMes.reduce((s,v)=>s+v.cantidad,0);
+  const unidadesLast = lastMes.reduce((s,v)=>s+v.cantidad,0);
+
+  // Top producto
+  const prodCount = {};
+  ventas.forEach(v => { prodCount[v.productoNombre] = (prodCount[v.productoNombre]||0) + v.cantidad; });
+  const topProd = Object.entries(prodCount).sort((a,b)=>b[1]-a[1])[0];
+
+  // Top canal
+  const canalCount = {};
+  ventas.forEach(v => { canalCount[v.canal] = (canalCount[v.canal]||0) + 1; });
+  const topCanal = Object.entries(canalCount).sort((a,b)=>b[1]-a[1])[0];
+
+  const diff = ingresosLast > 0 ? Math.round((ingresosThis - ingresosLast) / ingresosLast * 100) : null;
+  const diffStr = diff !== null ? `<span class="${diff >= 0 ? "metric-up" : "metric-down"}">${diff >= 0 ? "+" : ""}${diff}% vs mes anterior</span>` : "";
+
+  document.getElementById("m-ingresos").textContent = ingresosThis ? fmt(ingresosThis) : "$0";
+  document.getElementById("m-ingresos-sub").innerHTML = diffStr;
+  document.getElementById("m-unidades").textContent = unidadesThis || 0;
+  document.getElementById("m-unidades-sub").textContent = unidadesLast ? `${unidadesLast} el mes anterior` : "";
+  document.getElementById("m-top-producto").textContent = topProd ? topProd[0].split(" ").slice(0,2).join(" ") : "—";
+  document.getElementById("m-top-sub").textContent = topProd ? `${topProd[1]} unidades totales` : "";
+  document.getElementById("m-top-canal").textContent = topCanal ? topCanal[0] : "—";
+  document.getElementById("m-canal-sub").textContent = topCanal ? `${topCanal[1]} ventas` : "";
+
+  // Gráfico últimos 6 meses
+  const chart = document.getElementById("bar-chart");
+  chart.innerHTML = "";
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+    const label = meses[d.getMonth()];
+    const total = ventas.filter(v=>v.fecha.startsWith(key)).reduce((s,v)=>s+v.precio,0);
+    months.push({ key, label, total });
+  }
+  const maxVal = Math.max(...months.map(m=>m.total), 1);
+  months.forEach(m => {
+    const pct = Math.round((m.total / maxVal) * 100);
+    const col = document.createElement("div");
+    col.className = "bar-col";
+    col.innerHTML = `
+      <div class="bar-val">${m.total ? fmt(m.total).replace("$","") : ""}</div>
+      <div class="bar" style="height:${Math.max(pct,2)}%" title="${fmt(m.total)}"></div>
+      <div class="bar-label">${m.label}</div>`;
+    chart.appendChild(col);
+  });
+}
+
+// ── DUPLICAR PRODUCTO ─────────────────────────────────────────────────────────
+async function duplicarProducto(id) {
+  const p = productos.find(x=>x.id===id);
+  if (!p) return;
+  const copia = { ...p, id: nextId(), nombre: p.nombre + " (copia)", fechaAlta: new Date().toISOString() };
+  productos.push(copia);
+  renderList();
+  setLoading(true);
+  toast("Guardando…");
+  const ok = await ghSave({ config, productos, ventas });
+  setLoading(false);
+  toast(ok ? "Producto duplicado ✓" : "Error al guardar", !ok);
 }
 
 // ── CONFIG ────────────────────────────────────────────────────────────────────
@@ -493,7 +627,19 @@ function abrirModal(id=null) {
     const prev = document.getElementById("img-preview");
     if (p.foto) { prev.src = p.foto; prev.style.display = "block"; }
     else { prev.style.display = "none"; prev.src = ""; }
+    // Historial de precios
+    const histWrap = document.getElementById("price-history-wrap");
+    const histList = document.getElementById("price-history-list");
+    if (p.precioHistorial && p.precioHistorial.length) {
+      histWrap.style.display = "block";
+      histList.innerHTML = p.precioHistorial.slice(-5).reverse().map(h =>
+        `<div class="price-history-item"><span>${h.fecha}</span><span>${fmt(h.precioAnterior)} → ${fmt(h.precioNuevo)}</span></div>`
+      ).join("");
+    } else {
+      histWrap.style.display = "none";
+    }
   } else {
+    document.getElementById("price-history-wrap").style.display = "none";
     ["m-nombre","m-descripcion","m-tag","m-filamento","m-insumos","m-tiempo","m-precio","m-descuento","m-descuento-fecha","m-foto-url"].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=""; });
   document.getElementById("m-stock").value = 0;
     document.getElementById("m-insumos").value = "0";
@@ -549,7 +695,14 @@ async function guardarProducto() {
   const isEditing = editingId;
   if (isEditing) {
     const idx = productos.findIndex(p=>p.id===isEditing);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, descuento, descuentoFecha, foto };
+    if (idx >= 0) {
+      const precioAnterior = productos[idx].precio;
+      const historial = productos[idx].precioHistorial || [];
+      if (precioAnterior !== precio) {
+        historial.push({ fecha: new Date().toISOString().split("T")[0], precioAnterior, precioNuevo: precio });
+      }
+      productos[idx] = { ...productos[idx], nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, descuento, descuentoFecha, foto, precioHistorial: historial };
+    }
   } else {
     productos.push({ id:nextId(), nombre, descripcion, tag, stockUnidades, filamento, insumos, tiempo, precio, descuento, descuentoFecha, foto, fechaAlta: new Date().toISOString() });
   }
@@ -605,6 +758,7 @@ async function init() {
   renderList();
   renderSelectProductos();
   renderVentas();
+  renderMetrics();
   toast("Listo ✓");
 }
 
@@ -662,6 +816,7 @@ async function registrarVenta() {
 
   renderList();
   renderVentas();
+  renderMetrics();
   setLoading(true);
   toast("Guardando…");
   const ok = await ghSave({ config, productos, ventas });
@@ -686,13 +841,21 @@ function renderVentas() {
   const container = document.getElementById("ventas-mes");
   if (!container) return;
 
-  if (!ventas.length) {
-    container.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:24px 0;">No hay ventas registradas todavía.</div>`;
+  const query = (document.getElementById("ventas-search-input")?.value || "").toLowerCase().trim();
+  const ventasFiltradas = query
+    ? ventas.filter(v =>
+        v.productoNombre.toLowerCase().includes(query) ||
+        v.canal.toLowerCase().includes(query) ||
+        (v.notas||"").toLowerCase().includes(query))
+    : ventas;
+
+  if (!ventasFiltradas.length) {
+    container.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:24px 0;">${query ? "No se encontraron ventas con ese criterio." : "No hay ventas registradas todavía."}</div>`;
     return;
   }
 
   const grupos = {};
-  ventas.forEach(v => {
+  ventasFiltradas.forEach(v => {
     const [y, m] = v.fecha.split("-");
     const key = `${y}-${m}`;
     if (!grupos[key]) grupos[key] = [];
@@ -704,12 +867,12 @@ function renderVentas() {
 
   container.innerHTML = keys.map(key => {
     const [y, m] = key.split("-");
-    const lista = grupos[key];
+    const lista = grupos[key].sort((a,b) => b.fecha.localeCompare(a.fecha));
     const totalUnidades = lista.reduce((s,v) => s + v.cantidad, 0);
     const totalPesos = lista.reduce((s,v) => s + v.precio, 0);
     const mesNombre = meses[parseInt(m) - 1] + " " + y;
 
-    const filas = lista.sort((a,b) => b.fecha.localeCompare(a.fecha)).map(v => `
+    const filas = lista.map(v => `
       <tr>
         <td>${v.fecha}</td>
         <td>${v.productoNombre}</td>
