@@ -90,7 +90,7 @@
       "insumos": 4000,
       "nombre": "Velador Wavy",
       "precio": 22500,
-      "stockUnidades": 1,
+      "stockUnidades": 0,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
     },
@@ -120,6 +120,18 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
+    }
+  ],
+  "ventas": [
+    {
+      "canal": "Otro",
+      "cantidad": 1,
+      "fecha": "2026-03-19",
+      "id": 1773950986267,
+      "notas": "Sobrina de J. L.",
+      "precio": 22500,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
     }
   ]
 }
