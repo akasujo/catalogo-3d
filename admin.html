@@ -583,11 +583,18 @@ async function init() {
   if (data) {
     productos = data.productos || [];
     config    = data.config    || { contacto:"", whatsapp:"" };
-    ventas    = data.ventas    || [];
+    const ghVentas = data.ventas || [];
+    // Merge con localStorage — tomar las más recientes de ambas fuentes
+    const localVentas = JSON.parse(localStorage.getItem("ventas_backup") || "[]");
+    const allVentas = [...ghVentas];
+    localVentas.forEach(lv => {
+      if (!allVentas.find(v => v.id === lv.id)) allVentas.push(lv);
+    });
+    ventas = allVentas;
   } else {
     productos = DEFAULT_DATA.productos;
     config    = DEFAULT_DATA.config;
-    ventas    = [];
+    ventas    = JSON.parse(localStorage.getItem("ventas_backup") || "[]");
   }
   // Set today as default date
   const today = new Date().toISOString().split("T")[0];
@@ -632,7 +639,7 @@ async function registrarVenta() {
   }
 
   // Agregar venta al array global
-  ventas.push({
+  const nuevaVenta = {
     id: Date.now(),
     productoId: pid,
     productoNombre: prod.nombre,
@@ -641,7 +648,10 @@ async function registrarVenta() {
     canal,
     fecha,
     notas
-  });
+  };
+  ventas.push(nuevaVenta);
+  // Guardar backup en localStorage inmediatamente
+  localStorage.setItem("ventas_backup", JSON.stringify(ventas));
 
   // Limpiar form
   document.getElementById("v-cantidad").value = "";
@@ -656,12 +666,14 @@ async function registrarVenta() {
   toast("Guardando…");
   const ok = await ghSave({ config, productos, ventas });
   setLoading(false);
+  if (ok) localStorage.setItem("ventas_backup", JSON.stringify(ventas));
   toast(ok ? "Venta registrada ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
 }
 
 async function eliminarVenta(id) {
   if (!confirm("¿Eliminar esta venta?")) return;
   ventas = ventas.filter(v => v.id !== id);
+  localStorage.setItem("ventas_backup", JSON.stringify(ventas));
   renderVentas();
   setLoading(true);
   toast("Guardando…");
