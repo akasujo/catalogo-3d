@@ -157,6 +157,44 @@
       "stockUnidades": 8,
       "tag": "Temporada · Mundial",
       "tiempo": 22
+    },
+    {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-20T20:59:32.050Z",
+      "filamento": 5.2,
+      "foto": "https://i.imgur.com/hqrv2Lg.jpeg",
+      "id": 17,
+      "insumos": 100,
+      "nombre": "Llavero Snoopy (copia)",
+      "precio": 2000,
+      "precioHistorial": [],
+      "stockUnidades": 8,
+      "tag": "Temporada · Mundial",
+      "tiempo": 22
+    }
+  ],
+  "ventas": [
+    {
+      "canal": "Presencial",
+      "cantidad": 1,
+      "fecha": "2026-03-19",
+      "id": 1773951113218,
+      "notas": "Sobrina J.L.",
+      "precio": 22500,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "Presencial",
+      "cantidad": 2,
+      "fecha": "2026-03-19",
+      "id": 1773954335132,
+      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
+      "precio": 44000,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
     }
   ]
 }
