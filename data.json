@@ -120,28 +120,21 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
-    }
-  ],
-  "ventas": [
-    {
-      "canal": "Presencial",
-      "cantidad": 1,
-      "fecha": "2026-03-19",
-      "id": 1773951113218,
-      "notas": "Sobrina J.L.",
-      "precio": 22500,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
     },
     {
-      "canal": "Presencial",
-      "cantidad": 2,
-      "fecha": "2026-03-19",
-      "id": 1773954335132,
-      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
-      "precio": 44000,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-20T14:02:19.792Z",
+      "filamento": 180,
+      "foto": "https://i.imgur.com/DaJMoXk.jpeg",
+      "id": 15,
+      "insumos": 4000,
+      "nombre": "Velador",
+      "precio": 24000,
+      "stockUnidades": 0,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 420
     }
   ]
 }
