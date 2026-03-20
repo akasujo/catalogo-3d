@@ -23,6 +23,7 @@
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+.carousel { scroll-behavior:smooth; }
 body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
 
 /* ── ANNOUNCE ── */
@@ -373,8 +374,8 @@ function render() {
         <div class="cat-meta">
           <span class="cat-count">${prods.length} producto${prods.length !== 1 ? "s" : ""}</span>
           <div class="cat-nav">
-            <button class="cat-nav-btn" id="prev-${gi}" onclick="scroll('${carouselId}',-1)">←</button>
-            <button class="cat-nav-btn" id="next-${gi}" onclick="scroll('${carouselId}',1)">→</button>
+            <button class="cat-nav-btn" id="prev-${gi}" onclick="scrollCarousel('${carouselId}',-1)">←</button>
+            <button class="cat-nav-btn" id="next-${gi}" onclick="scrollCarousel('${carouselId}',1)">→</button>
           </div>
         </div>
       </div>
@@ -393,10 +394,12 @@ function render() {
   });
 }
 
-function scroll(carouselId, dir) {
+function scrollCarousel(carouselId, dir) {
   const carousel = document.getElementById(carouselId);
-  const cardW = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--card-w")) || 280;
-  carousel.scrollBy({ left: dir * (cardW + 1) * 2, behavior: "smooth" });
+  if (!carousel) return;
+  const firstCard = carousel.querySelector(".product-card");
+  const cardW = firstCard ? firstCard.offsetWidth + 1 : 281;
+  carousel.scrollBy({ left: dir * cardW * 2, behavior: "smooth" });
 }
 
 function updateNavBtns(gi, carouselId) {
