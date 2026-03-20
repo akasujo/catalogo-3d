@@ -162,14 +162,64 @@ body.dark .field .hint { color: #707068; }
 body.dark .error-msg { color: #E05C4A; }
 body.dark footer { border-top-color: #2E2E2C; color: #707068; }
 
+
+/* ── BACK BUTTON ANIMADO ── */
+.btn-back-animated {
+  position: relative;
+  width: 160px;
+  height: 48px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  flex-shrink: 0;
+}
+.btn-back-animated:hover { border-color: var(--accent); }
+.btn-back-animated__slide {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 40px;
+  height: calc(100% - 8px);
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  z-index: 2;
+  overflow: hidden;
+}
+.btn-back-animated:hover .btn-back-animated__slide { width: calc(100% - 8px); }
+.btn-back-animated__slide svg { width: 18px; height: 18px; flex-shrink: 0; }
+.btn-back-animated__label { position: relative; z-index: 1; padding-left: 12px; transition: color 0.3s; pointer-events: none; }
+body.dark .btn-back-animated { background: #1A1A18; border-color: #2E2E2C; color: #F0EDE8; }
+body.dark .btn-back-animated:hover { border-color: var(--accent); }
+body.dark .btn-back-animated__slide svg path { fill: #0F0F0E; }
+
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <div class="header-inner">
-      <a href="landing.html" class="brand">rems.</a>
-      <a href="landing.html" class="btn-back">← Volver</a>
+      <a href="index.html" class="brand">rems.</a>
+      <a href="index.html" class="btn-back-animated">
+        <div class="btn-back-animated__slide">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000"/><path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#000"/></svg>
+        </div>
+        <span class="btn-back-animated__label">Volver</span>
+      </a>
       <label class="theme-switch" id="theme-toggle-wrap">
   <input type="checkbox" class="theme-switch__checkbox" id="theme-toggle">
   <div class="theme-switch__container">
