@@ -141,6 +141,19 @@
       "stockUnidades": 0,
       "tag": "Decoracion / Hogar",
       "tiempo": 420
+    },
+    {
+      "descripcion": "",
+      "fechaAlta": "2026-03-20T20:54:03.468Z",
+      "filamento": 5.2,
+      "foto": "https://i.imgur.com/adQycX6.jpeg",
+      "id": 16,
+      "insumos": 100,
+      "nombre": "Llavero Copa del Mundo 2026 (copia)",
+      "precio": 2000,
+      "stockUnidades": 42,
+      "tag": "Temporada · Mundial",
+      "tiempo": 22
     }
   ],
   "ventas": [
