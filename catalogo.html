@@ -305,7 +305,7 @@ function makeCard(p) {
       ${isNew ? `<div class="badge-new">Nuevo</div>` : ""}
       ${hasDiscount ? `<div class="badge-discount">-${fmt(p.descuento)}</div>` : ""}
       ${p.foto
-        ? `<img src="${p.foto}" alt="${p.nombre}" onclick="openLightbox('${p.foto}','${p.nombre}')">`
+        ? `<img src="${p.foto}" alt="${p.nombre}" onclick="window.location.href='producto.html?id=${p.id}'" style="cursor:pointer;">`
         : `<div class="card-img-placeholder">🖨️</div>`}
     </div>
     <div class="card-body">
