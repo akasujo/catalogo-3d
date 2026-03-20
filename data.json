@@ -130,8 +130,9 @@
       "foto": "https://i.imgur.com/DaJMoXk.jpeg",
       "id": 15,
       "insumos": 4000,
-      "nombre": "Velador",
+      "nombre": "Velador Kumo",
       "precio": 24000,
+      "precioHistorial": [],
       "stockUnidades": 0,
       "tag": "Decoracion / Hogar",
       "tiempo": 420
