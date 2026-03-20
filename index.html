@@ -184,19 +184,131 @@ footer {
 .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom:-4.062em; }
 .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top:50%; transform:translateY(-50%); }
 
-/* ── DARK MODE ── */
+
+
+
+
+
+
+/* ── DARK MODE COMPLETO ── */
 body.dark {
   --bg: #0F0F0E;
   --bg2: #1A1A18;
-  --border: #2A2A28;
+  --border: #2E2E2C;
   --text: #F0EDE8;
-  --muted: #6A6860;
+  --muted: #707068;
+  --accent: #C8A96E;
   --white: #1A1A18;
   --card-bg: #1A1A18;
+  --green: #4CAF7D;
+  background: #0F0F0E;
+  color: #F0EDE8;
 }
-body.dark nav { background:rgba(15,15,14,0.95); }
-body.dark .announce { background:#0A0A09; }
-body.dark footer { background:#0A0A09; }
+body.dark nav {
+  background: rgba(10,10,9,0.96);
+  border-bottom-color: #2E2E2C;
+}
+body.dark .announce { background: #0A0A09; }
+body.dark footer { background: #0A0A09; }
+body.dark .page-header-inner { border-bottom-color: #2E2E2C; }
+body.dark .page { background: #0F0F0E; }
+
+/* Cards */
+body.dark .product-card { background: #1A1A18; }
+body.dark .product-card:hover { background: #222220; }
+body.dark .card-img-wrap { background: #222220; }
+body.dark .card-footer { border-top-color: #2E2E2C; }
+body.dark .card-name { color: #F0EDE8; }
+body.dark .card-desc { color: #707068; }
+body.dark .card-tag { color: #C8A96E; }
+body.dark .price-val { color: #4CAF7D; }
+body.dark .price-original { color: #707068; }
+body.dark .btn-share-card { border-color: #2E2E2C; color: #707068; }
+body.dark .btn-share-card:hover { border-color: #F0EDE8; color: #F0EDE8; }
+
+/* Carousel/Categories */
+body.dark .categories { background: transparent; }
+body.dark .cat-section { background: transparent; }
+body.dark .cat-head { border-bottom-color: #2E2E2C; }
+body.dark .cat-title { color: #F0EDE8; }
+body.dark .cat-count { color: #707068; }
+body.dark .cat-nav-btn { background: #1A1A18; border-color: #2E2E2C; color: #707068; }
+body.dark .cat-nav-btn:hover { background: #F0EDE8; color: #0F0F0E; border-color: #F0EDE8; }
+body.dark .carousel { background: #2E2E2C; }
+body.dark .carousel-wrap { background: transparent; }
+
+/* Nav links */
+body.dark .nav-logo { color: #F0EDE8; }
+body.dark .nav-links a { color: #707068; }
+body.dark .nav-links a:hover { color: #F0EDE8; }
+body.dark .nav-icon-btn { color: #707068; }
+body.dark .nav-icon-btn:hover { color: #F0EDE8; }
+
+/* Filters / sort */
+body.dark .filter-chip { border-color: #2E2E2C; color: #707068; background: transparent; }
+body.dark .filter-chip:hover, body.dark .filter-chip.active { background: #F0EDE8; border-color: #F0EDE8; color: #0F0F0E; }
+body.dark .sort-chip { border-color: #2E2E2C; color: #707068; background: transparent; }
+body.dark .sort-chip:hover, body.dark .sort-chip.active { background: #F0EDE8; border-color: #F0EDE8; color: #0F0F0E; }
+
+/* Search */
+body.dark .search-input { background: #1A1A18; border-color: #2E2E2C; color: #F0EDE8; }
+body.dark .search-input:focus { border-color: #F0EDE8; }
+body.dark .search-input::placeholder { color: #2E2E2C; }
+body.dark .search-wrap svg { fill: #707068; }
+
+/* Section head */
+body.dark .section-head { border-bottom-color: #2E2E2C; }
+body.dark .section-title { color: #F0EDE8; }
+body.dark .section-count { color: #707068; }
+
+/* Hero */
+body.dark .hero-desc { color: #707068; }
+body.dark .hero-stat-label { color: #707068; }
+body.dark .hero-visual { background: #1A1A18; }
+body.dark .btn-hero-secondary { border-color: #2E2E2C; color: #F0EDE8; }
+body.dark .hero-stats { border-top-color: #2E2E2C; }
+
+/* Index */
+body.dark .eyebrow { color: #C8A96E; }
+body.dark .tagline { color: #707068; }
+body.dark .choice { background: #1A1A18; color: #F0EDE8; border-color: transparent; }
+body.dark .choice:hover { background: #F0EDE8; color: #0F0F0E; }
+body.dark .choice-sub { color: #707068; }
+body.dark .choice:hover .choice-sub { color: #555; }
+body.dark .choices { background: #2E2E2C; border-color: #2E2E2C; }
+body.dark .social-link { color: #707068; }
+body.dark .social-link:hover { color: #F0EDE8; }
+body.dark .social-sep { background: #2E2E2C; }
+body.dark footer .footer-copy { color: rgba(240,237,232,0.3); }
+body.dark .footer-links a { color: rgba(240,237,232,0.3); }
+body.dark .footer-links a:hover { color: #F0EDE8; }
+body.dark .footer-brand { color: #F0EDE8; }
+
+/* Producto individual */
+body.dark .product-info .card-tag { color: #C8A96E; }
+body.dark .product-name { color: #F0EDE8; }
+body.dark .product-desc { color: #707068; }
+body.dark .product-divider { border-top-color: #2E2E2C; }
+body.dark .product-img-wrap { background: #1A1A18; border-color: #2E2E2C; }
+body.dark .price-val { color: #4CAF7D; }
+body.dark .stock-badge { background: #1A2E1F; }
+body.dark .btn-hero-primary { background: #F0EDE8; color: #0F0F0E; }
+body.dark .btn-hero-primary:hover { background: #ccc; }
+body.dark .related-card { background: #1A1A18; color: #F0EDE8; }
+body.dark .related-card:hover { background: #222220; }
+body.dark .related-img { background: #222220; }
+body.dark .related-name { color: #F0EDE8; }
+body.dark .related-price { color: #4CAF7D; }
+body.dark .related-section { border-top-color: #2E2E2C; }
+body.dark .btn-back { color: #707068; }
+body.dark .btn-back:hover { color: #F0EDE8; }
+body.dark .btn-share { border-color: #2E2E2C; color: #707068; }
+body.dark .btn-share:hover { border-color: #F0EDE8; color: #F0EDE8; }
+
+/* No results */
+body.dark .no-results { background: #1A1A18; color: #707068; }
+body.dark .no-cat { color: #707068; }
+
 </style>
 </head>
 <body>
@@ -265,12 +377,11 @@ body.dark footer { background:#0A0A09; }
 
 <footer>rems. · Impresión 3D Argentina · © 2026</footer>
 
+
 <script>
-// Aplicar tema antes de renderizar (evita flash)
 (function() {
   if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
 })();
-
 document.addEventListener("DOMContentLoaded", function() {
   const toggle = document.getElementById("theme-toggle");
   if (!toggle) return;
