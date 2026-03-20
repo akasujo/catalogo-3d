@@ -185,6 +185,19 @@
   /* Producto row — 5 botones */
   .product-row { grid-template-columns:56px 1fr 120px 120px 72px; }
 
+  /* Orden de categorías */
+  .cat-order-list { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:40px; }
+  .cat-order-row { background:var(--white); display:flex; align-items:center; gap:12px; padding:14px 16px; transition:background 0.15s; }
+  .cat-order-row:hover { background:var(--bg2); }
+  .cat-order-num { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; color:var(--muted); width:28px; text-align:center; flex-shrink:0; }
+  .cat-order-name { flex:1; font-size:13px; font-weight:500; }
+  .cat-order-count { font-size:11px; color:var(--muted); }
+  .cat-order-btns { display:flex; gap:4px; }
+  .cat-move-btn { background:transparent; border:1px solid var(--border); color:var(--muted); padding:4px 10px; cursor:pointer; font-size:13px; transition:all 0.15s; }
+  .cat-move-btn:hover { background:var(--text); color:var(--white); border-color:var(--text); }
+  .cat-move-btn:disabled { opacity:0.25; cursor:not-allowed; }
+  .cat-move-btn:disabled:hover { background:transparent; color:var(--muted); border-color:var(--border); }
+
   @media(max-width:600px) {
     .product-row { grid-template-columns:40px 1fr 100px 32px; }
     .pr-cell.hide-mobile { display:none; }
@@ -261,6 +274,13 @@
         <input type="text" id="cfg-whatsapp" placeholder="Ej: +54 11 1234-5678">
       </div>
     </div>
+
+    <!-- Orden de categorías -->
+    <div class="section-header">
+      <span class="section-title">ORDEN DE CATEGORÍAS</span>
+      <button class="btn-outline" onclick="saveCatOrder()">Guardar orden</button>
+    </div>
+    <div class="cat-order-list" id="cat-order-list"></div>
 
     <!-- Products -->
     <div class="section-header">
@@ -489,6 +509,7 @@ function renderList() {
     <div class="pr-cell"></div>`;
   list.appendChild(hdr);
 
+  renderCatOrder();
   productos.forEach(p => {
     const row = document.createElement("div");
     row.className = "product-row";
@@ -731,6 +752,61 @@ async function eliminarProducto(id) {
   toast(ok ? "Producto eliminado ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
 }
 
+// ── ORDEN CATEGORÍAS ─────────────────────────────────────────────────────────
+function getCatOrder() {
+  // Get unique tags in current order
+  const tags = [...new Set(productos.map(p=>p.tag))];
+  const saved = config.catOrder || [];
+  // Merge: put saved order first, then any new tags not in saved order
+  const ordered = [...saved.filter(t => tags.includes(t)), ...tags.filter(t => !saved.includes(t))];
+  return ordered;
+}
+
+function renderCatOrder() {
+  const list = document.getElementById("cat-order-list");
+  if (!list) return;
+  const order = getCatOrder();
+  const counts = {};
+  productos.forEach(p => { counts[p.tag] = (counts[p.tag]||0)+1; });
+
+  list.innerHTML = "";
+  if (!order.length) {
+    list.innerHTML = `<div style="padding:16px;color:var(--muted);font-size:13px;">Agregá productos para ver las categorías.</div>`;
+    return;
+  }
+
+  order.forEach((tag, i) => {
+    const row = document.createElement("div");
+    row.className = "cat-order-row";
+    row.innerHTML = `
+      <div class="cat-order-num">${i+1}</div>
+      <div class="cat-order-name">${tag}</div>
+      <div class="cat-order-count">${counts[tag]||0} producto${(counts[tag]||0)!==1?"s":""}</div>
+      <div class="cat-order-btns">
+        <button class="cat-move-btn" onclick="moveCat(${i},-1)" ${i===0?"disabled":""}>↑</button>
+        <button class="cat-move-btn" onclick="moveCat(${i},1)" ${i===order.length-1?"disabled":""}>↓</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function moveCat(idx, dir) {
+  const order = getCatOrder();
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= order.length) return;
+  [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
+  config.catOrder = order;
+  renderCatOrder();
+}
+
+async function saveCatOrder() {
+  setLoading(true);
+  toast("Guardando orden…");
+  const ok = await ghSave({ config, productos, ventas });
+  setLoading(false);
+  toast(ok ? "Orden guardado ✓ (visible en ~30 seg)" : "Error al guardar", !ok);
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
   toast("Cargando datos…");
@@ -758,6 +834,7 @@ async function init() {
 
   loadConfigUI();
   renderList();
+  renderCatOrder();
   renderSelectProductos();
   renderVentas();
   renderMetrics();
