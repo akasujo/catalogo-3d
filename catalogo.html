@@ -255,6 +255,7 @@ const DEFAULT_PRODUCTS = [
 ];
 
 let productos = [];
+let catOrder = [];
 let sortMode = "default";
 
 function fmt(n) { return "$" + Math.round(n).toLocaleString("es-AR"); }
@@ -265,7 +266,8 @@ async function loadData() {
     if (!res.ok) throw new Error();
     const data = await res.json();
     productos = data.productos || DEFAULT_PRODUCTS;
-  } catch(e) { productos = DEFAULT_PRODUCTS; }
+    catOrder = (data.config && data.config.catOrder) || [];
+  } catch(e) { productos = DEFAULT_PRODUCTS; catOrder = []; }
   render();
 }
 
@@ -346,14 +348,19 @@ function render() {
     return;
   }
 
-  // Group by tag
+  // Group by tag respecting catOrder
   const grupos = {};
   getSorted(filtered).forEach(p => {
     if (!grupos[p.tag]) grupos[p.tag] = [];
     grupos[p.tag].push(p);
   });
 
-  Object.entries(grupos).forEach(([tag, prods], gi) => {
+  const allTags = [...new Set(getSorted(filtered).map(p=>p.tag))];
+  const orderedTags = [...catOrder.filter(t=>allTags.includes(t)), ...allTags.filter(t=>!catOrder.includes(t))];
+
+  orderedTags.forEach((tag, gi) => {
+    const prods = grupos[tag];
+    if (!prods) return;
     const section = document.createElement("div");
     section.className = "cat-section";
     section.id = "cat-" + gi;
