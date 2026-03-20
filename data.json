@@ -144,38 +144,19 @@
     },
     {
       "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
       "fechaAlta": "2026-03-20T20:54:03.468Z",
       "filamento": 5.2,
-      "foto": "https://i.imgur.com/adQycX6.jpeg",
+      "foto": "https://i.imgur.com/hqrv2Lg.jpeg",
       "id": 16,
       "insumos": 100,
       "nombre": "Llavero Copa del Mundo 2026 (copia)",
       "precio": 2000,
-      "stockUnidades": 42,
+      "precioHistorial": [],
+      "stockUnidades": 8,
       "tag": "Temporada · Mundial",
       "tiempo": 22
-    }
-  ],
-  "ventas": [
-    {
-      "canal": "Presencial",
-      "cantidad": 1,
-      "fecha": "2026-03-19",
-      "id": 1773951113218,
-      "notas": "Sobrina J.L.",
-      "precio": 22500,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
-    },
-    {
-      "canal": "Presencial",
-      "cantidad": 2,
-      "fecha": "2026-03-19",
-      "id": 1773954335132,
-      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
-      "precio": 44000,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
     }
   ]
 }
