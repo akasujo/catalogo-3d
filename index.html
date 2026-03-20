@@ -265,5 +265,26 @@ body.dark footer { background:#0A0A09; }
 
 <footer>rems. · Impresión 3D Argentina · © 2026</footer>
 
+<script>
+// Aplicar tema antes de renderizar (evita flash)
+(function() {
+  if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
+})();
+
+document.addEventListener("DOMContentLoaded", function() {
+  const toggle = document.getElementById("theme-toggle");
+  if (!toggle) return;
+  toggle.checked = document.body.classList.contains("dark");
+  toggle.addEventListener("change", function() {
+    if (this.checked) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
+</script>
 </body>
 </html>
