@@ -189,6 +189,22 @@
       "stockUnidades": 8,
       "tag": "Llaveros",
       "tiempo": 22
+    },
+    {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-21T14:56:09.015Z",
+      "filamento": 180,
+      "foto": "https://i.imgur.com/DaJMoXk.jpeg",
+      "id": 18,
+      "insumos": 4000,
+      "nombre": "Velador Kumo (copia)",
+      "precio": 24000,
+      "precioHistorial": [],
+      "stockUnidades": 5,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 420
     }
   ],
   "ventas": [
