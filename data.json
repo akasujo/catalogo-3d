@@ -122,7 +122,8 @@
       "insumos": 4000,
       "nombre": "Velador Coral | Naranja",
       "precio": 22500,
-      "stockUnidades": 1,
+      "precioHistorial": [],
+      "stockUnidades": 5,
       "tag": "Decoracion / Hogar",
       "tiempo": 360
     },
