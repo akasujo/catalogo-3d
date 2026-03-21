@@ -153,7 +153,13 @@
       "insumos": 4000,
       "nombre": "Velador Kumo",
       "precio": 24000,
-      "precioHistorial": [],
+      "precioHistorial": [
+        {
+          "fecha": "2026-03-21",
+          "precioAnterior": 24000,
+          "precioNuevo": 22500
+        }
+      ],
       "stockUnidades": 5,
       "tag": "Decoracion / Hogar",
       "tiempo": 420
@@ -195,38 +201,22 @@
       "descuento": 0,
       "descuentoFecha": "",
       "fechaAlta": "2026-03-21T14:56:09.015Z",
-      "filamento": 180,
-      "foto": "https://i.imgur.com/DaJMoXk.jpeg",
+      "filamento": 150,
+      "foto": "https://i.imgur.com/YsCMuol.png",
       "id": 18,
       "insumos": 4000,
-      "nombre": "Velador Kumo (copia)",
-      "precio": 24000,
-      "precioHistorial": [],
-      "stockUnidades": 5,
-      "tag": "Decoracion / Hogar",
-      "tiempo": 420
-    }
-  ],
-  "ventas": [
-    {
-      "canal": "Presencial",
-      "cantidad": 1,
-      "fecha": "2026-03-19",
-      "id": 1773951113218,
-      "notas": "Sobrina J.L.",
+      "nombre": "Velador Kyoto",
       "precio": 22500,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
-    },
-    {
-      "canal": "Presencial",
-      "cantidad": 2,
-      "fecha": "2026-03-19",
-      "id": 1773954335132,
-      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
-      "precio": 44000,
-      "productoId": 12,
-      "productoNombre": "Velador Wavy"
+      "precioHistorial": [
+        {
+          "fecha": "2026-03-21",
+          "precioAnterior": 24000,
+          "precioNuevo": 22500
+        }
+      ],
+      "stockUnidades": 1,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 240
     }
   ]
 }
