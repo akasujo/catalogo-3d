@@ -66,12 +66,17 @@
       "tiempo": 395
     },
     {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
       "filamento": 55,
       "foto": "https://i.imgur.com/mbE6QI2.jpeg",
       "id": 6,
       "insumos": 0,
       "nombre": "Caja de Figuritas Mundial 2026",
       "precio": 7500,
+      "precioHistorial": [],
+      "stockUnidades": 1,
       "tag": "Temporada · Mundial",
       "tiempo": 120
     },
