@@ -192,7 +192,7 @@
       "nombre": "Llavero pingüino",
       "precio": 2000,
       "precioHistorial": [],
-      "stockUnidades": 8,
+      "stockUnidades": 5,
       "tag": "Llaveros",
       "tiempo": 22
     },
@@ -217,6 +217,38 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 240
+    }
+  ],
+  "ventas": [
+    {
+      "canal": "Presencial",
+      "cantidad": 1,
+      "fecha": "2026-03-19",
+      "id": 1773951113218,
+      "notas": "Sobrina J.L.",
+      "precio": 22500,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "Presencial",
+      "cantidad": 2,
+      "fecha": "2026-03-19",
+      "id": 1773954335132,
+      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
+      "precio": 44000,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "WhatsApp",
+      "cantidad": 3,
+      "fecha": "2026-03-23",
+      "id": 1774308303014,
+      "notas": "-Juego de aros para motricidad -10 abecedarios",
+      "precio": 40000,
+      "productoId": 17,
+      "productoNombre": "Llavero pingüino"
     }
   ]
 }
