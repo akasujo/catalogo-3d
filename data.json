@@ -217,6 +217,22 @@
       "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 240
+    },
+    {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-26T12:42:36.455Z",
+      "filamento": 5.2,
+      "foto": "https://i.imgur.com/Vle2Tm5.png",
+      "id": 19,
+      "insumos": 100,
+      "nombre": "Llavero pingüino (copia)",
+      "precio": 2000,
+      "precioHistorial": [],
+      "stockUnidades": 5,
+      "tag": "Llaveros",
+      "tiempo": 22
     }
   ],
   "ventas": [
