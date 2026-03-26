@@ -233,6 +233,21 @@
       "stockUnidades": 5,
       "tag": "Llaveros",
       "tiempo": 22
+    },
+    {
+      "descripcion": "",
+      "descuento": 2000,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-03-26T12:52:55.738Z",
+      "filamento": 130,
+      "foto": "https://i.imgur.com/wSmN97g.png",
+      "id": 20,
+      "insumos": 0,
+      "nombre": "Juego de aros",
+      "precio": 12000,
+      "stockUnidades": 1,
+      "tag": "Juegos didacticos",
+      "tiempo": 300
     }
   ]
 }
