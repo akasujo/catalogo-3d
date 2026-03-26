@@ -220,7 +220,7 @@
       "tiempo": 240
     },
     {
-      "descripcion": "",
+      "descripcion": "LLAVEROS  x25 — $1.196 x50 — $898 x100 — $699 x250 — $600 x500 — $500 x1000 — $400",
       "descuento": 0,
       "descuentoFecha": "",
       "fechaAlta": "2026-03-26T12:42:36.455Z",
@@ -229,8 +229,14 @@
       "id": 19,
       "insumos": 100,
       "nombre": "Llavero Mis 50",
-      "precio": 2000,
-      "precioHistorial": [],
+      "precio": 1200,
+      "precioHistorial": [
+        {
+          "fecha": "2026-03-26",
+          "precioAnterior": 2000,
+          "precioNuevo": 1200
+        }
+      ],
       "stockUnidades": 5,
       "tag": "Suvenires",
       "tiempo": 22
