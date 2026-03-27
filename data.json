@@ -250,8 +250,9 @@
       "foto": "https://i.imgur.com/wSmN97g.png",
       "id": 20,
       "insumos": 0,
-      "nombre": "Juego de aros",
+      "nombre": "Test Enfen. | Juego de aros",
       "precio": 12000,
+      "precioHistorial": [],
       "stockUnidades": 1,
       "tag": "Juegos didacticos",
       "tiempo": 300
