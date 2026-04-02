@@ -10,7 +10,6 @@
     "contacto": "rems3d.ba@gmail.com",
     "whatsapp": "+54 9 11 7065-0288"
   },
-  "ventas": [],
   "productos": [
     {
       "descripcion": "",
@@ -20,7 +19,7 @@
       "insumos": 100,
       "nombre": "Llavero Copa del Mundo 2026",
       "precio": 2000,
-      "stockUnidades": 42,
+      "stockUnidades": 22,
       "tag": "Temporada · Mundial",
       "tiempo": 22
     },
@@ -257,6 +256,58 @@
       "stockUnidades": 1,
       "tag": "Juegos didacticos",
       "tiempo": 300
+    }
+  ],
+  "ventas": [
+    {
+      "canal": "Presencial",
+      "cantidad": 1,
+      "fecha": "2026-03-19",
+      "id": 1773951113218,
+      "notas": "Sobrina J.L.",
+      "precio": 22500,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "Presencial",
+      "cantidad": 2,
+      "fecha": "2026-03-19",
+      "id": 1773954335132,
+      "notas": "X2 VELADORES PARA ABUELOS DE MIA",
+      "precio": 44000,
+      "productoId": 12,
+      "productoNombre": "Velador Wavy"
+    },
+    {
+      "canal": "WhatsApp",
+      "cantidad": 3,
+      "fecha": "2026-03-23",
+      "id": 1774308303014,
+      "notas": "-Juego de aros para motricidad -10 abecedarios",
+      "precio": 40000,
+      "productoId": 17,
+      "productoNombre": "Llavero pingüino"
+    },
+    {
+      "canal": "WhatsApp",
+      "cantidad": 22,
+      "fecha": "2026-03-25",
+      "id": 1774529790896,
+      "notas": "",
+      "precio": 24000,
+      "productoId": 19,
+      "productoNombre": "Llavero Mis 50"
+    },
+    {
+      "canal": "Marketplace",
+      "cantidad": 20,
+      "fecha": "2026-04-01",
+      "id": 1775165029042,
+      "notas": "",
+      "precio": 19500,
+      "productoId": 1,
+      "productoNombre": "Llavero Copa del Mundo 2026"
     }
   ]
 }
