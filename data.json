@@ -284,7 +284,8 @@
       "insumos": 0,
       "nombre": "Caja Porta Figuritas Mundial 2026",
       "precio": 9999,
-      "stockUnidades": 0,
+      "precioHistorial": [],
+      "stockUnidades": 1,
       "tag": "Temporada · Mundial",
       "tiempo": 316
     },
