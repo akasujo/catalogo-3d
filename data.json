@@ -287,6 +287,21 @@
       "stockUnidades": 0,
       "tag": "Temporada · Mundial",
       "tiempo": 316
+    },
+    {
+      "descripcion": "Deco",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-04-28T13:05:47.171Z",
+      "filamento": 173,
+      "foto": "https://i.imgur.com/sNSJbWz.jpeg",
+      "id": 23,
+      "insumos": 0,
+      "nombre": "F40 Colgador de llaves",
+      "precio": 14500,
+      "stockUnidades": 0,
+      "tag": "Decoracion / Hogar",
+      "tiempo": 436
     }
   ]
 }
