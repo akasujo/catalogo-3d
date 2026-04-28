@@ -272,6 +272,21 @@
       "stockUnidades": 5,
       "tag": "Temporada · Mundial",
       "tiempo": 50
+    },
+    {
+      "descripcion": "",
+      "descuento": 0,
+      "descuentoFecha": "",
+      "fechaAlta": "2026-04-28T13:00:10.611Z",
+      "filamento": 135,
+      "foto": "https://i.imgur.com/dcee0KT.png",
+      "id": 22,
+      "insumos": 0,
+      "nombre": "Caja Porta Figuritas Mundial 2026",
+      "precio": 9999,
+      "stockUnidades": 0,
+      "tag": "Temporada · Mundial",
+      "tiempo": 316
     }
   ]
 }
