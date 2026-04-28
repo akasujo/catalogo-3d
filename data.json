@@ -268,8 +268,9 @@
       "insumos": 100,
       "nombre": "Llavero Porta Celular Argentina",
       "precio": 2500,
+      "precioHistorial": [],
       "stockUnidades": 5,
-      "tag": "Temporada - Mundial",
+      "tag": "Temporada · Mundial",
       "tiempo": 50
     }
   ]
