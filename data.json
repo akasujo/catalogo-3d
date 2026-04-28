@@ -299,7 +299,8 @@
       "insumos": 0,
       "nombre": "F40 Colgador de llaves",
       "precio": 14500,
-      "stockUnidades": 0,
+      "precioHistorial": [],
+      "stockUnidades": 1,
       "tag": "Decoracion / Hogar",
       "tiempo": 436
     }
